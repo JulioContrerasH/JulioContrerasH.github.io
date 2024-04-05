@@ -38,7 +38,7 @@ metaDataFormat= "yaml"
   img_title = "Thanks to Christina @ wocintechchat.com for this photo."
   icon = "img/man.png"
   quote = "I envision my code, and then I code my vision - Ada Lovelace"
-  description= "I am a professional with 2 years in web development and data science, focusing on spatial analysis and big data, especially in scraping and managing remote sensing data. I'm proficient with R, Python, Google Earth Engine, and Planetary Computer, and in web development with React, HUGO, recently shifting to Astro with Tailwind CSS. I aim to transition into academia, where my passion and ambitions drive me to innovate in Deep Learning and Remote Sensing. My work ethic is grounded in responsibility, commitment, proactivity, and efficiency in multidisciplinary teams."
+  description= "I am a professional with two years in web development and data science, focusing on spatial analysis and big data, especially in scraping and managing remote sensing data. I'm proficient with R, Python, Google Earth Engine, and Planetary Computer, and in web development with React, HUGO, recently shifting to Astro with Tailwind CSS. I aim to transition into academia, where my passion and ambitions drive me to innovate in Deep Learning and Remote Sensing. My work ethic is grounded in responsibility, commitment, proactivity, and efficiency in multidisciplinary teams."
   licenseUrl = ""
 
  # Social icons
