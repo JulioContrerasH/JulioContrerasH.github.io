@@ -1,0 +1,86 @@
+{{define "main"}}
+
+<div class="container">
+    
+    <div class="content">
+    <div class="content_text">
+      <a class="beautiful-link" href="https://ee-leslyarcelly213.projects.earthengine.app/view/cloudapp#run=true;sensor=Sentinel-2%20SR;lon=-76.39138073674154;lat=-12.316563873945507;rgb=SWIR1%2FNIR%2FGREEN;initYear=2018;initMonth=8;initDay=12;cloud=30;chipwidth=2;imgid=20190212T142031_20190212T143214_T19FDF;llb1=-1;ulb1=1;llndvi=-1;ulndvi=1;llb11=-1;ulb11=1;">
+      <h3>CloudApp</h3>                   
+      </a>
+      <p>This repository hosts the JavaScript for the CloudApp Earth Engine App. Our application help to visualize Sentinel-2 satellite imagery. This app is inspired by the GEE Explorer from Justin Braaten.
+      </p>
+    </div>
+    <a href="https://ee-leslyarcelly213.projects.earthengine.app/view/cloudapp#run=true;sensor=Sentinel-2%20SR;lon=-76.39138073674154;lat=-12.316563873945507;rgb=SWIR1%2FNIR%2FGREEN;initYear=2018;initMonth=8;initDay=12;cloud=30;chipwidth=2;imgid=20190212T142031_20190212T143214_T19FDF;llb1=-1;ulb1=1;llndvi=-1;ulndvi=1;llb11=-1;ulb11=1;">
+    <img src="https://cloudsen12.github.io/thumbnails/cloudsen12.gif" alt="Image 1" width="80%" class="img">
+    </a>
+    </div>
+
+  
+  <div class="content">
+    <div class="content_text">
+      <a class="beautiful-link" href="https://cloudsen12.github.io/map.html">
+      <h3>CloudMap</h3>
+      </a>
+      <p>CloudSEN12 spatial coverage. This leaflet map shows the metadata for each ROI in the cloudSEN12 dataset.</p>
+    </div>
+    <a class="beautiful-link" href="https://cloudsen12.github.io/map.html">
+    <img src="https://cloudsen12.github.io/thumbnails/cloudsen12.gif" alt="Image 1" width="80%" class="img">
+    </a>
+  </div>
+
+  <div class="content">
+    <div class="content_text">
+      <a class="beautiful-link" href="https://leslybautista.github.io/subsector/main.html">
+      <h3>SIRAD Database Preview</h3>
+      </a>
+      <p>Inventory of emergency resources for the Piura region, input for the development of the SIRAD - Information System on Disaster Response Resources developed by INDECI with the support of UNDP Peru.</p>
+    </div>
+    <a class="beautiful-link" href="https://leslybautista.github.io/subsector/main.html">
+    <img src="https://github.com/leslybautista/leslybautista.github.io/assets/54723897/35e47b30-2834-47fc-9fea-9a0b0ac92a3b" alt="Image 3" class="img">
+    </a>
+  </div>
+
+  <p style="text-align:center"><a class="link" href="../">Go back home</a></p>
+
+</div>
+
+<style>
+    .content {
+      display: flex;
+      align-items: center; /* Centrar verticalmente los elementos */
+
+      margin-bottom: 20px; /* Espacio entre cada conjunto de texto e imagen */
+    }
+    .content_text {
+      flex: 1; /* Que ocupe el espacio restante */
+      position: relative; /* Posición relativa para el contenido */
+    }
+    
+    .img {
+      margin-left: 20px;
+      max-width: 100%; /* Limitar el ancho máximo de las imágenes */
+      max-height: 100px;
+    }
+    
+    .hyperlink-container {
+      display: inline-block;
+      background-color: #1d2021; /* Dark background for contrast */
+      padding: 10px; /* Some padding around the link */
+      border-radius: 5px; /* Rounded corners for the container */
+    }
+  
+    .beautiful-link {
+      text-decoration: none; /* Removes the underline from the link */
+      font-size: 20px; /* Adjusts the size of the link text */
+      color: #5887fc; /* Initial color of the link */
+      font-family: Arial, sans-serif; /* Font style for the link */
+      transition: color 0.3s ease; /* Smooth transition for color change */
+    }
+  
+    .beautiful-link:hover {
+      color: #859094; /* Color of the link when hovered over */
+      cursor: pointer; /* Changes the cursor to indicate a clickable link */
+    }    
+</style>
+{{ end }}
+

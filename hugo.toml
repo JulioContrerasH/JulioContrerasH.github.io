@@ -1,0 +1,137 @@
+name = "Gruvhugo"
+license = "GPL-3.0"
+description = "A minmal theme based on the Gruvbox color scheme."
+tags = ["landing page", "gruvbox", "blog", "mobile", "light", "minimal", "modern", "customizable", "dark mode"]
+features = ["fast", "dark mode", "Responsive", "Clean", "Simple"]
+min_version = "0.41"
+
+[author]
+  name = "Abraham Raji"
+  homepage = "https://abrahamraji.in"
+
+
+baseURL = ''
+
+
+
+
+# Default Post Extension
+defaultExtension= "html"
+
+# Default metadata format for newly created frontmatter using
+# hugo new command. "toml", "yaml", or "json"
+metaDataFormat= "yaml"
+
+[taxonomies]
+  tag      = "tags"
+  category = "categories"
+  series   = "series"
+
+[params.main]
+  enabled = true
+  enableKatex = true
+  metaKeywords = "fast, hugo, theme, minimal, gruvbox"
+  headerTitle = "Julio Contreras"
+  copyright = "© 2023 Julio Contreras.  <a href=\"https://creativecommons.org/licenses/by/4.0/\">Some rights reserved</a>."
+  name = "jane_doe"
+  img = "./img/author.jpg"
+  img_title = "Thanks to Christina @ wocintechchat.com for this photo."
+  icon = "img/man.png"
+  quote = "I envision my code, and then I code my vision - Ada Lovelace"
+  description= "I am a professional with 2 years in web development and data science, focusing on spatial analysis and big data, especially in scraping and managing remote sensing data. I'm proficient with R, Python, Google Earth Engine, and Planetary Computer, and in web development with React, HUGO, recently shifting to Astro with Tailwind CSS. I aim to transition into academia, where my passion and ambitions drive me to innovate in Deep Learning and Remote Sensing. My work ethic is grounded in responsibility, commitment, proactivity, and efficiency in multidisciplinary teams."
+  licenseUrl = ""
+
+ # Social icons
+  [[params.social]]
+    name = "email"
+    url  = "mailto:contrerasnetk@gmail.com"
+
+  [[params.social]]
+    name = "gpg"
+    url  = "https://keys.openpgp.org/"
+
+  [[params.social]]
+    name = "github"
+    url  = "https://github.com/juliocontrerash"
+
+  [[params.social]]
+    name = "linkedin"
+    url  = "https://www.linkedin.com/in/julio-cesar-contreras-huerta-254030176/"
+
+[params.style]
+  # add path to custom CSS files here
+  custom_css = []
+  # add path to custom SCSS files here
+  custom_scss = []
+
+[menu]
+  [[menu.main]]
+    identifier = "portfolio"
+    name       = "Portfolio"
+    url        = "./portfolio/"
+
+  [[menu.main]]
+    identifier = "cv"
+    name       = "CV"
+    url        = "https://juliocontrerash.github.io/CV/"
+
+[markup]
+  defaultMarkdownHandler = "goldmark"
+  [markup.asciidocExt]
+    backend = "html5"
+    docType = "article"
+    extensions = []
+    failureLevel = "fatal"
+    noHeaderOrFooter = true
+    safeMode = "unsafe"
+    sectionNumbers = false
+    trace = false
+    verbose = true
+    workingFolderCurrent = false
+    [markup.asciidocExt.attributes]
+  [markup.blackFriday]
+    angledQuotes = false
+    footnoteAnchorPrefix = ""
+    footnoteReturnLinkContents = ""
+    fractions = true
+    hrefTargetBlank = false
+    latexDashes = true
+    nofollowLinks = false
+    noreferrerLinks = false
+    plainIDAnchors = true
+    skipHTML = false
+    smartDashes = true
+    smartypants = true
+    smartypantsQuotesNBSP = false
+    taskLists = true
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+    [markup.goldmark.parser]
+      attribute = true
+      autoHeadingID = true
+      autoHeadingIDType = "github"
+    [markup.goldmark.renderer]
+      hardWraps = false
+      unsafe = false
+      xhtml = false
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    style = "monokai"
+    tabWidth = 4
+  [markup.tableOfContents]
+    endLevel = 3
+    ordered = false
+    startLevel = 2
