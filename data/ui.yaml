@@ -31,6 +31,7 @@ es:
     all_projects: Todos los proyectos
     all_publications: Todas las publicaciones
     open: Abrir
+    lang_switch: EN
   sections:
     research: Investigación
     research_intro: Papers, datasets y benchmarks. De limpiar nubes a mirar metano.
@@ -89,6 +90,7 @@ en:
     all_projects: All projects
     all_publications: All publications
     open: Open
+    lang_switch: ES
   sections:
     research: Research
     research_intro: Papers, datasets and benchmarks. From cleaning clouds to looking at methane.
