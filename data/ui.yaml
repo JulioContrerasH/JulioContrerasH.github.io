@@ -58,7 +58,7 @@ es:
         entrené y evalué superresolución: SEN2NAIP, SEN2SR y SEN2NEON.
     ahora:
       title: Ahora
-      text: Sigo investigando en Asterisk Labs. Trabajo en TACO, el formato para empaquetar datasets de observación de la Tierra listos para IA. CubeXpress salió de bajar cubos de GEE sin dolor. Y ahora ando metido en MethaneSET, midiendo fugas de metano con varios satélites.
+      text: Trabajo como investigador en el Parc Científic de la Universitat de València, en el grupo ISP (isp.uv.es). Sigo colaborando con Asterisk Labs, donde trabajo en TACO, el formato para empaquetar datasets de observación de la Tierra listos para IA. CubeXpress salió de bajar cubos de GEE sin dolor. Y ahora ando metido en MethaneSET, midiendo fugas de metano con varios satélites.
 
 en:
   site:
@@ -117,4 +117,4 @@ en:
         evaluated super-resolution: SEN2NAIP, SEN2SR and SEN2NEON.
     ahora:
       title: Now
-      text: I keep researching at Asterisk Labs. I work on TACO, the format for packaging AI-ready Earth Observation datasets. CubeXpress came out of downloading GEE cubes without pain. And now I am deep into MethaneSET, measuring methane leaks with several satellites.
+      text: I work as a researcher at the Science Park of the Universitat de València, in the ISP group (isp.uv.es). I keep collaborating with Asterisk Labs, where I work on TACO, the format for packaging AI-ready Earth Observation datasets. CubeXpress came out of downloading GEE cubes without pain. And now I am deep into MethaneSET, measuring methane leaks with several satellites.

@@ -115,6 +115,28 @@ const countries = {
   ),
 };
 
+// Franjas de bandera semitransparentes por país (generadas por scripts/country_flags.py).
+const stripesRaw = JSON.parse(
+  readFileSync(new URL('../../public/assets/geo/country-stripes.json', import.meta.url), 'utf-8')
+);
+const countryInfo = new Map(
+  countries.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature.properties] as const
+  )
+);
+const stripes = {
+  ...stripesRaw,
+  features: stripesRaw.features.map(
+    (feature: { properties: { id: string } } & Record<string, unknown>) => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        ...(countryInfo.get(feature.properties.id) ?? {}),
+      },
+    })
+  ),
+};
+
 const data = {
   lang,
   ground,
@@ -122,6 +144,7 @@ const data = {
   halos,
   labels: coverageLabels,
   countries,
+  stripes,
   flights,
   open: T.labels.open,
 };
@@ -211,13 +234,16 @@ const data = {
 
     let hoveredCountry: string | null = null;
 
-    // Resaltado sutil: tinte de alpha bajo sin paredes, el mapa de puntos se ve debajo.
-    const countryCap = (feature: { properties: CountryProps }) => {
-      const { id } = feature.properties;
-      return hoveredCountry === id ? 'rgba(168, 139, 250, 0.34)' : 'rgba(168, 139, 250, 0.16)';
+    // Franjas de bandera: cada país pintado con sus colores, muy suaves.
+    const withAlpha = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     };
 
-    const countryStroke = () => 'rgba(168, 139, 250, 0.7)';
+    const flagCap = (feature: { properties: { id: string; color: string } }) =>
+      withAlpha(feature.properties.color, hoveredCountry === feature.properties.id ? 0.6 : 0.36);
 
     const toRad = (deg: number) => (deg * Math.PI) / 180;
     const toDeg = (rad: number) => (rad * 180) / Math.PI;
@@ -344,9 +370,9 @@ const data = {
         .pointsMerge(false)
         .pointsData(data.ground ?? [])
         .polygonAltitude(0.006)
-        .polygonCapColor(countryCap)
+        .polygonCapColor(flagCap)
         .polygonSideColor(() => 'rgba(0, 0, 0, 0)')
-        .polygonStrokeColor(countryStroke)
+        .polygonStrokeColor(() => 'rgba(255, 255, 255, 0)')
         .polygonsTransitionDuration(250);
 
       // Anillos: pulso corto en los puntos ground + halo amplio y lento por cobertura regional.
@@ -403,12 +429,12 @@ const data = {
       const heroView = { lat: 18, lng: -35, altitude: 2.1 };
       globe.pointOfView(heroView, 0);
 
-      globe.polygonsData(data.countries?.features ?? []);
+      globe.polygonsData(data.stripes?.features ?? []);
 
       globe.onPolygonHover((polygon: unknown) => {
         const props = (polygon as { properties?: CountryProps } | null)?.properties;
         hoveredCountry = props?.id ?? null;
-        globe.polygonCapColor(countryCap);
+        globe.polygonCapColor(flagCap);
         if (props) {
           showTip({
             title: countryName(props),

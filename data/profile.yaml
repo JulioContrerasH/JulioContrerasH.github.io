@@ -58,7 +58,8 @@ bio:
 affiliations:
   - id: uv
     org: Universitat de València
-    dept: Parque Científico (PCUV), grupo ISP/IPL
+    dept: Parque Científico (PCUV), grupo ISP
+    web: https://isp.uv.es/
     role: Investigador
     dates: 2025-
     source: julio
@@ -75,8 +76,8 @@ affiliations:
     source: public
   - id: asterisk
     org: Asterisk Labs
-    role: Investigador
-    dates: null            # missing: sigue activo; falta fecha de inicio
+    role: Colaborador
+    dates: null            # colabora en TACO y CubeXpress, no es su empleo
     source: julio
 
 education:
@@ -173,6 +174,7 @@ links:
   orcid: https://orcid.org/0009-0001-5408-7055
   linkedin: https://www.linkedin.com/in/julio-cesar-contreras-huerta-254030176/
   x: https://twitter.com/JulioCe67844735
+  isp: https://isp.uv.es/
   cv: null               # el CV ahora vive en /cv/; el repo viejo julio.../CV queda por decidir
 
 _sources:

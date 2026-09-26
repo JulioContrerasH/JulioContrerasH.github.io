@@ -1241,3 +1241,19 @@ li {
   white-space: nowrap;
   border: 0;
 }
+
+/* transición suave del escenario oscuro del globo al contenido */
+.solid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(180deg, rgba(7, 7, 15, 0.92) 0%, rgba(7, 7, 15, 0) 100%);
+  pointer-events: none;
+}
+
+:root[data-theme='dark'] .solid::before {
+  background: none;
+}
