@@ -23,10 +23,10 @@ TEXTURE_URL = (
     "geojson/ne_110m_land.geojson"
 )
 
-W, H = 2048, 1024
-STEP = 1.0
-DOT_R = 2.0
-COLOR = (150, 160, 176, 230)
+W, H = 4096, 2048
+STEP = 0.6
+DOT_R = 2.6
+COLOR = (178, 168, 214, 235)
 
 
 def load_geojson() -> dict:

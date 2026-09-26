@@ -3,8 +3,8 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://juliocontrerash.github.io',
   i18n: {
-    defaultLocale: 'es',
-    locales: ['es', 'en'],
+    defaultLocale: 'en',
+    locales: ['en', 'es'],
     routing: { prefixDefaultLocale: false },
   },
   build: {

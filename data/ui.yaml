@@ -11,6 +11,7 @@ es:
     software: Software
     publications: Publicaciones
     talks: Charlas
+    cv: CV
   hero:
     line: Datos satelitales que sirven.
     scroll: Baja para ver el recorrido
@@ -76,6 +77,7 @@ en:
     software: Software
     publications: Publications
     talks: Talks
+    cv: CV
   hero:
     line: Satellite data that gets used.
     scroll: Scroll to follow the path

@@ -1,0 +1,101 @@
+---
+import { profile, t, type Lang } from '../../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+const L = {
+  experience: lang === 'es' ? 'Experiencia' : 'Experience',
+  education: lang === 'es' ? 'Educación' : 'Education',
+  skills: lang === 'es' ? 'Habilidades' : 'Skills',
+  languages: lang === 'es' ? 'Idiomas' : 'Languages',
+  links: lang === 'es' ? 'Enlaces' : 'Links',
+  cvOnline: lang === 'es' ? 'CV online' : 'Online CV',
+  fullCv: lang === 'es' ? 'CV completo' : 'Full CV',
+};
+---
+
+<section class="section">
+  <div class="wrap">
+    <h1>CV</h1>
+    <p class="intro">{lang === 'es' ? profile.bio.es : profile.bio.en}</p>
+
+    <div class="cv-grid">
+      <div>
+        <h2>{L.experience}</h2>
+        <ul class="list">
+          {
+            profile.experience.map((item) => (
+              <li>
+                <div class="title">{item.role}</div>
+                <div class="meta">
+                  {item.org}
+                  {item.dates ? ` · ${item.dates}` : ''}
+                </div>
+                {item.details && <div class="meta">{item.details}</div>}
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2>{L.education}</h2>
+        <ul class="list">
+          {
+            profile.education.map((item) => (
+              <li>
+                <div class="title">{item.degree}</div>
+                <div class="meta">
+                  {item.org} · {item.dates}
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <aside>
+        <h2>{L.skills}</h2>
+        {
+          profile.skills.map((group) => (
+            <div class="cv-skill">
+              <div class="title">{group.family}</div>
+              <div class="meta">{group.items.join(', ')}</div>
+            </div>
+          ))
+        }
+
+        <h2>{L.languages}</h2>
+        <ul class="list">
+          {
+            profile.languages.map((language) => (
+              <li>
+                <span class="title">{language.name}</span>{' '}
+                <span class="meta">{language.level}</span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2>{L.links}</h2>
+        <ul class="list">
+          {profile.links.cv && (
+            <li>
+              <a href={profile.links.cv}>{L.fullCv}</a>
+            </li>
+          )}
+          {profile.links.linkedin && (
+            <li>
+              <a href={profile.links.linkedin}>LinkedIn</a>
+            </li>
+          )}
+          <li>
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>

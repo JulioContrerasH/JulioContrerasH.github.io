@@ -92,6 +92,42 @@ education:
     dates: 2018-2022
     source: public         # ORCID + LinkedIn
 
+experience:
+  - org: Asterisk Labs
+    role: Investigador
+    dates: null            # missing: sigue activo; falta fecha de inicio
+    details: Herramientas abiertas de observación de la Tierra y clima.
+    source: julio
+  - org: Universitat de València (Parque Científico, ISP/IPL)
+    role: Investigador
+    dates: 2025-
+    details: Doctorado en detección multisesor de nubes en registros históricos.
+    source: julio
+  - org: Universidad Peruana Cayetano Heredia
+    role: Investigador
+    dates: 2023-2024
+    details: Andes DataCube, cubos de datos satelitales y detección de nubes.
+    source: legacy
+  - org: INSIDEO S.A.C.
+    role: Equipo de datos geográficos (GIS y mapas)
+    dates: 2022-2023
+    details: Mapas y datos para estudios de impacto ambiental en Perú.
+    source: legacy
+
+skills:
+  - family: Programming
+    items: [Python, R, JavaScript, HTML, CSS]
+  - family: GIS & remote sensing
+    items: [Google Earth Engine, ArcGIS Pro, QGIS, PostGIS, GeoServer, Leaflet]
+  - family: Tools
+    items: [Git, Power BI, Adobe]
+
+languages:
+  - name: Spanish
+    level: Native
+  - name: English
+    level: B2 (PTE Academic 68)
+
 links:
   github: https://github.com/JulioContrerasH
   scholar: https://scholar.google.com/citations?user=eca9RJYAAAAJ

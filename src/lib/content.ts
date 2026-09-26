@@ -24,6 +24,24 @@ export interface Education {
   source?: string;
 }
 
+export interface Experience {
+  org: string;
+  role: string;
+  dates?: string | null;
+  details?: string | null;
+  source?: string;
+}
+
+export interface SkillGroup {
+  family: string;
+  items: string[];
+}
+
+export interface LanguageSkill {
+  name: string;
+  level: string;
+}
+
 export interface Profile {
   name: string;
   display_name: string;
@@ -36,6 +54,9 @@ export interface Profile {
   bio: { es: string; en: string; status?: string; tone?: string };
   affiliations: Affiliation[];
   education: Education[];
+  experience: Experience[];
+  skills: SkillGroup[];
+  languages: LanguageSkill[];
   links: Record<string, string | null>;
 }
 
@@ -130,14 +151,14 @@ export function otherLang(lang: Lang): Lang {
 }
 
 export function switchLangPath(lang: Lang, path: string): string {
-  if (lang === 'es') {
-    return path === '/' ? '/en/' : `/en${path}`;
+  if (lang === 'en') {
+    return path === '/' ? '/es/' : `/es${path}`;
   }
-  return path.replace(/^\/en/, '') || '/';
+  return path.replace(/^\/es/, '') || '/';
 }
 
 export function localizedPath(lang: Lang, path: string): string {
   const clean = path.replace(/^\/|\/$/g, '');
-  const prefix = lang === 'en' ? '/en' : '';
+  const prefix = lang === 'es' ? '/es' : '';
   return clean ? `${prefix}/${clean}/` : `${prefix}/`;
 }

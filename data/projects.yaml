@@ -167,6 +167,7 @@
   links:
     paper: https://ipl-uv.github.io/taco-methaneset/papers/taco-icml-2025.pdf
     repo: https://github.com/asterisk-labs/taco
+    web: https://asterisk.coop/taco/
     spec: https://asterisk.coop/taco/spec
   status: public
   _missing: [rol]
@@ -185,6 +186,7 @@
   links:
     repo: https://github.com/JulioContrerasH/CubeXpress
     pypi: https://pypi.org/project/cubexpress/
+    docs: https://andesdatacube.github.io/cubexpress/
   status: public
   _missing: [rol]
 

@@ -33,8 +33,8 @@ La foto va en `public/assets/img/` (hoy `author.jpeg` desde `static/img/`, ver `
 ## Estructura
 
 - `src/lib/content.ts` — lee y ordena los YAML.
-- `src/components/` — tarjetas, listas, globo.
-- `src/pages/` — rutas ES; `src/pages/en/` — rutas EN.
+- `src/components/` — tarjetas, listas, globo, CV.
+- `src/pages/` — rutas EN (por defecto); `src/pages/es/` — rutas ES.
 - `scripts/globe_texture.py` — regenera la textura de puntos del globo.
 - `scripts/ne_110m_land.geojson` — costas de Natural Earth para esa textura.
 

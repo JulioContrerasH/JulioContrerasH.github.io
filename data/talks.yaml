@@ -24,17 +24,6 @@
   source: public
   status: confirmar si presentó
 
-- id: amlec-ecmlpkdd25
-  title: "The Atmospheric Machine Learning Emulation Challenge (AMLEC)"
-  event: ECML PKDD 2025 Workshops
-  place: Porto, Portugal
-  date: 2025-09-15/2025-09-19
-  kind: challenge
-  role: organizador       # ELIAS lo lista como organizador
-  links: {}
-  source: public
-  status: confirmar
-
 - id: taco-kom-gmh-2025-12
   title: TACO
   event: Kick-off GMH-UV
