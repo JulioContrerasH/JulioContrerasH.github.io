@@ -1,0 +1,28 @@
+---
+import type { Lang, Publication } from '../lib/content';
+
+interface Props {
+  items: Publication[];
+  lang: Lang;
+}
+
+const { items, lang } = Astro.props;
+const linkText = lang === 'es' ? 'DOI' : 'DOI';
+---
+
+<ul class="list">
+  {
+    items.map((item) => (
+      <li>
+        <div class="title">{item.title}</div>
+        <div class="meta">
+          {item.venue} · {item.year}
+        </div>
+        <div class="links">
+          {item.doi && <a href={`https://doi.org/${item.doi}`}>{linkText}</a>}
+          {!item.doi && item.url && <a href={item.url}>{lang === 'es' ? 'Enlace' : 'Link'}</a>}
+        </div>
+      </li>
+    ))
+  }
+</ul>

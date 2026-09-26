@@ -1,0 +1,19 @@
+---
+import { talks, t, type Lang } from '../../lib/content';
+import TalkList from '../TalkList.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+---
+
+<section class="section">
+  <div class="wrap">
+    <h1>{T.sections.talks}</h1>
+    <p class="intro">{T.sections.talks_intro}</p>
+    <TalkList items={talks} lang={lang} />
+  </div>
+</section>

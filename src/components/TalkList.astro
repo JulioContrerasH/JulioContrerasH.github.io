@@ -1,0 +1,34 @@
+---
+import { linkLabel, type Lang, type Talk } from '../lib/content';
+
+interface Props {
+  items: Talk[];
+  lang: Lang;
+}
+
+const { items, lang } = Astro.props;
+const dateRange = (date: string | number) => String(date).replace('/', ' – ');
+---
+
+<ul class="list">
+  {
+    items.map((item) => (
+      <li>
+        {item.title && <div class="title">{item.title}</div>}
+        <div class="meta">
+          {item.event}
+          {item.place ? ` · ${item.place}` : ''} · {dateRange(item.date)}
+        </div>
+        {
+          Object.entries(item.links ?? {}).length > 0 && (
+            <div class="links">
+              {Object.entries(item.links).map(([key, href]) => (
+                <a href={href}>{linkLabel(lang, key)}</a>
+              ))}
+            </div>
+          )
+        }
+      </li>
+    ))
+  }
+</ul>

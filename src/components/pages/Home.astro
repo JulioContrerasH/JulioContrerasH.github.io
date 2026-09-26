@@ -1,0 +1,112 @@
+---
+import {
+  chapterProjects,
+  localizedPath,
+  profile,
+  publications,
+  research,
+  t,
+  type Lang,
+} from '../../lib/content';
+import Globe from '../Globe.astro';
+import ProjectCard from '../ProjectCard.astro';
+import PublicationList from '../PublicationList.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+const bio = lang === 'es' ? profile.bio.es : profile.bio.en;
+const chapters = [
+  { id: 'peru', projects: chapterProjects('peru') },
+  { id: 'valencia', projects: chapterProjects('valencia') },
+  { id: 'ahora', projects: chapterProjects('ahora') },
+] as const;
+const featured = research.slice(0, 4);
+const latest = publications.slice(0, 4);
+---
+
+<div class="stage">
+  <Globe />
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-inner">
+        <img class="portrait" src={profile.photo} alt={profile.name} width="88" height="88" />
+        <p class="eyebrow">{profile.location.origin} → {profile.location.current}</p>
+        <h1>{profile.display_name}</h1>
+        <p class="line">{T.hero.line}</p>
+        <p class="sub">{bio}</p>
+        <div class="actions">
+          <a href={`mailto:${profile.email}`}>{T.hero.email}</a>
+          {profile.links.cv && <a href={profile.links.cv}>{T.hero.cv}</a>}
+          {profile.links.github && <a href={profile.links.github}>GitHub</a>}
+          {profile.links.scholar && <a href={profile.links.scholar}>Scholar</a>}
+        </div>
+        <p class="scroll-hint">{T.hero.scroll}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapters">
+    <div class="wrap">
+      {
+        chapters.map(({ id, projects: items }, index) => (
+          <article class="chapter" id={`chapter-${id}`}>
+            <div class="chapter-card">
+              <p class="num">{String(index + 1).padStart(2, '0')}</p>
+              <h2>{T.chapters[id].title}</h2>
+              <p>{T.chapters[id].text}</p>
+              <ul>
+                {items.map((project) => (
+                  <li>
+                    <a href={`${localizedPath(lang, '/research')}#${project.id}`}>{project.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</div>
+
+<div class="solid" id="solid">
+  <section class="section">
+    <div class="wrap">
+      <h2>{T.sections.research}</h2>
+      <p class="intro">{T.sections.research_intro}</p>
+      <div class="grid">
+        {featured.map((project) => <ProjectCard project={project} lang={lang} />)}
+      </div>
+      <p style="margin-top: 20px">
+        <a class="btn" href={localizedPath(lang, '/research')}>{T.labels.all_projects}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>{T.sections.publications}</h2>
+      <p class="intro">{T.sections.publications_intro}</p>
+      <PublicationList items={latest} lang={lang} />
+      <p style="margin-top: 20px">
+        <a class="btn" href={localizedPath(lang, '/publications')}>
+          {T.labels.all_publications}
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap" id="contact">
+      <h2>{T.sections.contact}</h2>
+      <p class="intro">{T.sections.contact_text}</p>
+      <p>
+        <a class="btn" href={`mailto:${profile.email}`}>{profile.email}</a>
+      </p>
+    </div>
+  </section>
+</div>

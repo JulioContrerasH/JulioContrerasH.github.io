@@ -1,0 +1,35 @@
+---
+import { profile, t, type Lang } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+const links = [
+  { key: 'github', label: 'GitHub' },
+  { key: 'scholar', label: 'Google Scholar' },
+  { key: 'orcid', label: 'ORCID' },
+  { key: 'linkedin', label: 'LinkedIn' },
+  { key: 'cv', label: 'CV' },
+] as const;
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="row">
+      <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      {
+        links.map(({ key, label }) =>
+          profile.links[key] ? (
+            <a href={profile.links[key] as string} rel="me">
+              {label}
+            </a>
+          ) : null
+        )
+      }
+    </div>
+    <p style="margin-top: 14px">© {new Date().getFullYear()} {profile.name}.</p>
+  </div>
+</footer>

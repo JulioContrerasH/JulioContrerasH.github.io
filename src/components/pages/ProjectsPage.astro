@@ -1,0 +1,41 @@
+---
+import { applied, research, software, t, type Lang } from '../../lib/content';
+import ProjectCard from '../ProjectCard.astro';
+
+interface Props {
+  lang: Lang;
+  kind: 'research' | 'software';
+}
+
+const { lang, kind } = Astro.props;
+const T = t(lang);
+const main = kind === 'research' ? research : software;
+const intro = kind === 'research' ? T.sections.research_intro : T.sections.software_intro;
+const title = kind === 'research' ? T.sections.research : T.sections.software;
+---
+
+<section class="section">
+  <div class="wrap">
+    <h1>{title}</h1>
+    <p class="intro">{intro}</p>
+    <div class="grid">
+      {main.map((project) => <ProjectCard project={project} lang={lang} />)}
+    </div>
+  </div>
+</section>
+
+{
+  kind === 'research' && applied.length > 0 && (
+    <section class="section">
+      <div class="wrap">
+        <h2>{T.sections.applied}</h2>
+        <p class="intro">{T.sections.applied_intro}</p>
+        <div class="grid">
+          {applied.map((project) => (
+            <ProjectCard project={project} lang={lang} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

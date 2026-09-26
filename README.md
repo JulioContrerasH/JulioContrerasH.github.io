@@ -1,38 +1,43 @@
-# Gruvhugo
-[![pipeline status](https://gitlab.com/avron/gruvhugo/badges/master/pipeline.svg)](https://gitlab.com/avron/gruvhugo/-/commits/master)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# Web personal
 
-This is a minmal theme based on the [Gruvbox](https://github.com/morhetz/gruvbox) color scheme by [Pavel Pertsev](https://github.com/morhetz/)
+Sitio estático en Astro que se genera por completo desde `data/`. El globo 3D es decoración sobre contenido real: todo se ve aunque el WebGL no cargue.
 
-# Feature
-- **Minimalism is the norm here** 
-- **Fast.**
-- **Theming**: Persistent color theme, depending on your preference.
-- Clean UI
-- Intuitive Navigation.
-- Highly customizable
-  - Every piece of text you see is customizable.
-  - Customizable Pictures
-  - Customizable Menu 
-- Fully responsive
-- Support for social media icons
+## Correr en local
 
-## Screnshots
-![Main page screenshot: Light Theme](images/readme/screenshot.png "Light Theme Screenshot")
-![Main page screenshot: Dark Theme](images/readme/screenshot-dark.png "Light Dark Screenshot")
-
-## Installation
-Adding theme as a sub-module is by the most efficient way to do things in my opinion. If you wish to use the theme as it is then all you need to do add the sub-module but if you wish to modify and maintain your own fork of the theme then make the necessary changes to the git remotes as you see fit.
-
-``` sh
-$ git submodule add https://gitlab.com/avron/gruvhugo.git
+```bash
+export PATH=/data/users/julio/.conda/envs/web/bin:$PATH
+npm install
+npm run dev        # http://localhost:4321
+npm run build      # genera dist/
+npm run preview    # sirve dist/
 ```
-## Configuration
-Like almost every other Hugo the config file is placed in 
-[exampleSite/config.toml](https://gitlab.com/avron/gruvhugo/-/blob/master/exampleSite/config.toml)
 
-## Contributing
-Issues and merge requests for bug fixes and enhancements are welcome.
+## Editar contenido
 
-## Licence
-The theme is released under the GPL v3 License.
+Todo vive en `data/` y se edita a mano:
+
+| Archivo | Qué lleva |
+| --- | --- |
+| `data/profile.yaml` | Nombre, bio ES/EN, foto, afiliaciones, links, email |
+| `data/projects.yaml` | Proyectos. `include: true/false` decide si salen; `order` el orden; `type: ground` pone punto en el globo (necesita `coords`), `type: orbit` pone satélite |
+| `data/publications.yaml` | Papers con DOI |
+| `data/talks.yaml` | Charlas y eventos |
+| `data/ui.yaml` | Textos de interfaz y capítulos (Perú, Valencia, Ahora) en ES/EN |
+
+Para añadir un paper: copia una entrada de `publications.yaml`, cambia `title`, `year`, `venue` y `doi`. Nada más.
+
+Para añadir un proyecto con lugar: añade la entrada en `projects.yaml` con `type: ground`, `coords: {lon, lat}` y `include: true`. Aparece como punto en el globo y como tarjeta.
+
+La foto va en `public/assets/img/` (hoy `author.jpeg` desde `static/img/`, ver `data/profile.yaml`).
+
+## Estructura
+
+- `src/lib/content.ts` — lee y ordena los YAML.
+- `src/components/` — tarjetas, listas, globo.
+- `src/pages/` — rutas ES; `src/pages/en/` — rutas EN.
+- `scripts/globe_texture.py` — regenera la textura de puntos del globo.
+- `scripts/ne_110m_land.geojson` — costas de Natural Earth para esa textura.
+
+## Publicar
+
+Push a `main` dispara `.github/workflows/deploy.yml` y publica en GitHub Pages. El CV viejo vive en su propio repo (`JulioContrerasH/CV`); el sitio Hugo anterior quedó en la rama `legacy-hugo`.

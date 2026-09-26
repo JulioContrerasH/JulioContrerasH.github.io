@@ -1,0 +1,8 @@
+# Notas internas del vault: no van al repo público
+00-estado.md
+00-hoja-de-ruta.md
+
+# Node / Astro
+node_modules/
+dist/
+.astro/

@@ -1,5 +1,0 @@
----
-title: portfolio
-type: "portfolio/"
----
-

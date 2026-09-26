@@ -1,0 +1,224 @@
+---
+import { projects } from '../lib/content';
+
+const firstLink = (links: Record<string, string>) => Object.values(links ?? {})[0] ?? null;
+
+const ground = projects
+  .filter((p) => p.type === 'ground' && p.coords)
+  .map((p) => ({
+    id: p.id,
+    title: p.title,
+    year: p.year ? String(p.year) : '',
+    location: p.location ?? '',
+    lat: p.coords!.lat,
+    lng: p.coords!.lon,
+    url: firstLink(p.links),
+  }));
+
+const orbit = projects
+  .filter((p) => p.type === 'orbit')
+  .map((p) => ({
+    id: p.id,
+    title: p.title,
+    year: p.year ? String(p.year) : '',
+    url: firstLink(p.links),
+  }));
+
+const data = {
+  ground,
+  orbit,
+  arc: { startLat: -12.055, startLng: -77.083, endLat: 39.472, endLng: -0.376 },
+};
+---
+
+<div id="globe" aria-hidden="true"></div>
+<div class="globe-tip" role="status"></div>
+<script type="application/json" id="globe-data" set:html={JSON.stringify(data)} />
+
+<script>
+  const container = document.getElementById('globe');
+  const dataEl = document.getElementById('globe-data');
+  const tip = document.querySelector<HTMLElement>('.globe-tip');
+
+  if (container && dataEl && tip) {
+    const data = JSON.parse(dataEl.textContent || '{}');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const small = matchMedia('(max-width: 720px)').matches;
+    const saveData = (navigator as { connection?: { saveData?: boolean } }).connection?.saveData;
+
+    let pointer = { x: 0, y: 0 };
+    addEventListener(
+      'pointermove',
+      (event) => {
+        pointer = { x: event.clientX, y: event.clientY };
+      },
+      { passive: true }
+    );
+
+    const showTip = (item: { title: string; year?: string; location?: string; url?: string | null }) => {
+      tip.textContent = '';
+      const strong = document.createElement('strong');
+      strong.textContent = item.year ? `${item.title} · ${item.year}` : item.title;
+      tip.append(strong);
+      if (item.location) {
+        const span = document.createElement('span');
+        span.className = 'tip-meta';
+        span.textContent = item.location;
+        tip.append(span);
+      }
+      if (item.url) {
+        const link = document.createElement('a');
+        link.href = item.url;
+        link.textContent = 'Abrir';
+        link.target = '_blank';
+        link.rel = 'noopener';
+        tip.append(link);
+      }
+      tip.style.left = `${pointer.x}px`;
+      tip.style.top = `${pointer.y}px`;
+      tip.classList.add('visible');
+    };
+
+    const hideTip = () => tip.classList.remove('visible');
+
+    const boot = async () => {
+      const [{ default: Globe }, THREE] = await Promise.all([import('globe.gl'), import('three')]);
+
+      const globe = new Globe(container, {
+        rendererConfig: { antialias: !small, alpha: true },
+      });
+
+      globe
+        .globeImageUrl('/assets/img/globe-dots.png')
+        .showAtmosphere(true)
+        .atmosphereColor('#3b82f6')
+        .atmosphereAltitude(0.16)
+        .backgroundColor('rgba(0,0,0,0)')
+        .pointAltitude(0.012)
+        .pointRadius(small ? 0.26 : 0.2)
+        .pointColor(() => '#2dd4bf')
+        .pointsMerge(false)
+        .pointsData(data.ground ?? []);
+
+      globe.globeMaterial().transparent = true;
+
+      const controls = globe.controls();
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.autoRotate = !reduced;
+      controls.autoRotateSpeed = 0.35;
+
+      const heroView = { lat: 18, lng: -35, altitude: 2.1 };
+      globe.pointOfView(heroView, 0);
+
+      if (data.arc) {
+        globe
+          .arcsData([data.arc])
+          .arcColor(['#2dd4bf', '#60a5fa'])
+          .arcDashLength(0.4)
+          .arcDashGap(1.4)
+          .arcDashAnimateTime(reduced ? 0 : 3200)
+          .arcStroke(0.4);
+      }
+
+      if ((data.orbit ?? []).length) {
+        const count = data.orbit.length;
+        const satellites = data.orbit.map(
+          (sat: { id: string; title: string; year: string; url: string | null }, index: number) => ({
+            ...sat,
+            speed: 0.22 + (index % 3) * 0.07,
+            phase: (index * Math.PI * 2) / count,
+            inclination: (index % 2 === 0 ? 1 : -1) * (0.35 + (index % 3) * 0.2),
+            altitude: 0.09 + (index % 3) * 0.03,
+          })
+        );
+
+        const geometry = new THREE.SphereGeometry(0.011, 12, 12);
+        const material = new THREE.MeshBasicMaterial({ color: '#f59e0b' });
+
+        globe
+          .customLayerData(satellites)
+          .customThreeObject(() => new THREE.Mesh(geometry, material))
+          .customThreeObjectUpdate((object, sat) => {
+            const t = (performance.now() / 1000) * sat.speed + sat.phase;
+            const lat = Math.sin(t) * sat.inclination * 57.3;
+            const lng = ((((t * 57.3) % 360) + 540) % 360) - 180;
+            const coords = globe.getCoords(lat, lng, sat.altitude);
+            object.position.set(coords.x, coords.y, coords.z);
+          });
+
+        const customHover = (
+          globe as unknown as {
+            onCustomLayerHover?: (fn: (sat: unknown) => void) => void;
+          }
+        ).onCustomLayerHover;
+        if (typeof customHover === 'function') {
+          customHover.call(globe, (sat: unknown) => {
+            if (sat) showTip(sat as { title: string; year: string; url: string | null });
+            else hideTip();
+          });
+        }
+      }
+
+      globe.onPointHover((point: unknown) => {
+        if (point) showTip(point as { title: string; year: string; location: string; url: string | null });
+        else hideTip();
+        container.style.cursor = point ? 'pointer' : 'default';
+      });
+
+      globe.onPointClick((point: unknown) => {
+        const url = (point as { url?: string | null })?.url;
+        if (url) window.open(url, '_blank', 'noopener');
+      });
+
+      const views: Record<string, { lat: number; lng: number; altitude: number }> = {
+        peru: { lat: -10, lng: -76, altitude: 1.7 },
+        valencia: { lat: 39.5, lng: -0.4, altitude: 1.7 },
+        ahora: { lat: 51.5, lng: -0.1, altitude: 2.0 },
+      };
+
+      const chapters = document.querySelectorAll('.chapter');
+      if (chapters.length) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              const id = entry.target.id.replace('chapter-', '');
+              const view = views[id];
+              if (view) {
+                globe.pointOfView(view, reduced ? 0 : 1400);
+                controls.autoRotate = false;
+              }
+            }
+          },
+          { threshold: 0.55 }
+        );
+        chapters.forEach((chapter) => observer.observe(chapter));
+        addEventListener(
+          'scroll',
+          () => {
+            if (window.scrollY < innerHeight * 0.5) controls.autoRotate = !reduced;
+          },
+          { passive: true }
+        );
+      }
+
+      addEventListener(
+        'resize',
+        () => {
+          globe.width(innerWidth).height(innerHeight);
+        },
+        { passive: true }
+      );
+
+      globe.width(innerWidth).height(innerHeight);
+    };
+
+    if (!saveData) {
+      const idle = (window as unknown as { requestIdleCallback?: (fn: () => void, opts?: object) => void })
+        .requestIdleCallback;
+      if (idle) idle(() => void boot().catch(() => container.remove()), { timeout: 2500 });
+      else setTimeout(() => void boot().catch(() => container.remove()), 700);
+    }
+  }
+</script>

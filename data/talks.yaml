@@ -1,0 +1,59 @@
+# Charlas, posters y eventos. Única fuente de verdad para la web.
+# En el repo viejo no había nada: todo esto sale de fuentes públicas o del vault.
+
+- id: lps25-sen2sr
+  title: "Super-resolution of all Sentinel-2 bands to 10 meters using parameter-free attention and cross-correlation embeddings"
+  event: ESA Living Planet Symposium 2025
+  place: Vienna, Austria
+  date: 2025-06-23/2025-06-27
+  kind: talk
+  role: null              # missing: primer autor en el abstract; ¿quién presentó?
+  links: {}
+  source: public
+  status: confirmar
+
+- id: taco-terrabaytes-icml25
+  title: "The Missing Piece: Standardising for AI-ready Earth Observation Datasets"
+  event: TerraBytes, ICML 2025 Workshop
+  place: Vancouver, Canada
+  date: 2025-07-19
+  kind: paper          # era paper de workshop; falta saber si hubo charla
+  role: co-author (2nd)
+  links:
+    paper: https://ipl-uv.github.io/taco-methaneset/papers/taco-icml-2025.pdf
+  source: public
+  status: confirmar si presentó
+
+- id: amlec-ecmlpkdd25
+  title: "The Atmospheric Machine Learning Emulation Challenge (AMLEC)"
+  event: ECML PKDD 2025 Workshops
+  place: Porto, Portugal
+  date: 2025-09-15/2025-09-19
+  kind: challenge
+  role: organizador       # ELIAS lo lista como organizador
+  links: {}
+  source: public
+  status: confirmar
+
+- id: taco-kom-gmh-2025-12
+  title: TACO
+  event: Kick-off GMH-UV
+  place: null             # missing: ¿Valencia?
+  date: 2025-12-08
+  kind: talk
+  role: null              # missing
+  links: {}
+  source: vault
+  status: confirmar
+
+- id: gsds2023
+  title: null             # missing
+  event: GSDS 2023
+  place: null
+  date: 2023
+  kind: null
+  role: null
+  links:
+    repo: https://github.com/JulioContrerasH/transcript-spa-GSDS2023
+  source: legacy
+  status: missing

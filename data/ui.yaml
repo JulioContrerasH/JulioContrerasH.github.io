@@ -1,0 +1,132 @@
+# Textos de interfaz y de los capítulos. Única fuente de verdad para lo que no es dato.
+# Los capítulos son un borrador para que Julio los corrija en la revisión.
+
+es:
+  site:
+    title: Julio Contreras
+    description: Ingeniero geógrafo y doctorando en la Universitat de València. Datos satelitales que sirven.
+  nav:
+    home: Inicio
+    research: Investigación
+    software: Software
+    publications: Publicaciones
+    talks: Charlas
+  hero:
+    line: Datos satelitales que sirven.
+    scroll: Baja para ver el recorrido
+    email: Escríbeme
+    cv: CV
+  labels:
+    paper: Paper
+    repo: Repo
+    dataset: Dataset
+    demo: Demo
+    web: Web
+    thesis: Tesis
+    pypi: PyPI
+    models: Modelos
+    docs: Docs
+    news: Nota
+    spec: Spec
+    all_projects: Todos los proyectos
+    all_publications: Todas las publicaciones
+    stage: Etapa
+    stages:
+      limpiar: Limpiar
+      mejorar: Mejorar
+      mover-y-guardar: Mover y guardar
+      compartir: Compartir
+      usar: Usar
+    lang_switch: EN
+  sections:
+    research: Investigación
+    research_intro: Papers, datasets y benchmarks. De limpiar nubes a mirar metano.
+    applied: Trabajo aplicado
+    applied_intro: Mapas y datos que hice para proyectos reales en Perú.
+    software: Software
+    software_intro: Paquetes y formatos abiertos que uso yo y usa cualquiera.
+    publications: Publicaciones
+    publications_intro: Todo lo que he publicado, con DOI.
+    talks: Charlas
+    talks_intro: Dónde he presentado el trabajo.
+    contact: Contacto
+    contact_text: Para colaboraciones, datos o una conversación.
+  chapters:
+    peru:
+      title: Perú
+      text: Nací en Mala, Cañete. Estudié Ingeniería Geográfica en la UNMSM y salí primer puesto de mi promoción en 2022. Hice mapas y datos GIS para estudios ambientales en INSIDEO. Mi tesis armonizó Landsat MSS (1972-1999) con IA. Después vinieron Andes DataCube y CloudSEN12+.
+    valencia:
+      title: Valencia
+      text: >-
+        En septiembre de 2025 empecé el doctorado en la Universitat de València,
+        en el grupo ISP/IPL del Parque Científico. Investigo cómo detectar nubes
+        con deep learning en registros satelitales históricos. En el camino
+        entrené y evalué superresolución: SEN2NAIP, SEN2SR y SEN2NEON.
+    ahora:
+      title: Ahora
+      text: Sigo investigando en Asterisk Labs. Trabajo en TACO, el formato para empaquetar datasets de observación de la Tierra listos para IA. CubeXpress salió de bajar cubos de GEE sin dolor. Y ahora ando metido en MethaneSET, midiendo fugas de metano con varios satélites.
+
+en:
+  site:
+    title: Julio Contreras
+    description: Geospatial engineer and PhD student at the Universitat de València. Satellite data that gets used.
+  nav:
+    home: Home
+    research: Research
+    software: Software
+    publications: Publications
+    talks: Talks
+  hero:
+    line: Satellite data that gets used.
+    scroll: Scroll to follow the path
+    email: Email me
+    cv: CV
+  labels:
+    paper: Paper
+    repo: Repo
+    dataset: Dataset
+    demo: Demo
+    web: Web
+    thesis: Thesis
+    pypi: PyPI
+    models: Models
+    docs: Docs
+    news: News
+    spec: Spec
+    all_projects: All projects
+    all_publications: All publications
+    stage: Stage
+    stages:
+      limpiar: Clean
+      mejorar: Improve
+      mover-y-guardar: Move and store
+      compartir: Share
+      usar: Use
+    lang_switch: ES
+  sections:
+    research: Research
+    research_intro: Papers, datasets and benchmarks. From cleaning clouds to looking at methane.
+    applied: Applied work
+    applied_intro: Maps and data I made for real projects in Peru.
+    software: Software
+    software_intro: Open packages and formats that I use and anyone can use.
+    publications: Publications
+    publications_intro: Everything I have published, with DOI.
+    talks: Talks
+    talks_intro: Where I have presented the work.
+    contact: Contact
+    contact_text: For collaborations, data or a conversation.
+  chapters:
+    peru:
+      title: Peru
+      text: I was born in Mala, Cañete. I studied Geographical Engineering at UNMSM and finished top of my class in 2022. I made maps and GIS data for environmental studies at INSIDEO. My thesis harmonized Landsat MSS (1972-1999) with AI. Then came Andes DataCube and CloudSEN12+.
+    valencia:
+      title: Valencia
+      text: >-
+        In September 2025 I started my PhD at the Universitat de València, in
+        the ISP/IPL group at the Science Park. I research deep learning cloud
+        detection for historical satellite records. Along the way I trained and
+        evaluated super-resolution: SEN2NAIP, SEN2SR and SEN2NEON.
+    ahora:
+      title: Now
+      text: I keep researching at Asterisk Labs. I work on TACO, the format for packaging AI-ready Earth Observation datasets. CubeXpress came out of downloading GEE cubes without pain. And now I am deep into MethaneSET, measuring methane leaks with several satellites.

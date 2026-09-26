@@ -1,0 +1,19 @@
+---
+import { publications, t, type Lang } from '../../lib/content';
+import PublicationList from '../PublicationList.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+---
+
+<section class="section">
+  <div class="wrap">
+    <h1>{T.sections.publications}</h1>
+    <p class="intro">{T.sections.publications_intro}</p>
+    <PublicationList items={publications} lang={lang} />
+  </div>
+</section>

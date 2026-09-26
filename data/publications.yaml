@@ -1,0 +1,108 @@
+# Publicaciones de Julio. Única fuente de verdad para la web.
+# Nada de esto estaba en el repo viejo: todo viene de ORCID y páginas
+# públicas de los papers. Falta que Julio confirme el rol en cada una.
+#
+# source: public = verificado en DOI/página oficial; julio = confirmado.
+
+- id: cloudsen12plus
+  title: "CloudSEN12+: The largest dataset of expert-labeled pixels for cloud and cloud shadow detection in Sentinel-2"
+  year: 2024
+  venue: Data in Brief
+  doi: 10.1016/j.dib.2024.110852
+  url: https://doi.org/10.1016/j.dib.2024.110852
+  role: co-author (Validation, Investigation, Data Curation)
+  type: paper
+  source: public
+  status: confirmar rol
+
+- id: sen2naip
+  title: "SEN2NAIP: A large-scale dataset for Sentinel-2 Image Super-Resolution"
+  year: 2024
+  venue: Scientific Data
+  doi: 10.1038/s41597-024-04214-y
+  url: https://www.nature.com/articles/s41597-024-04214-y
+  role: co-author (3rd)
+  type: paper
+  source: public
+  status: confirmar rol
+
+- id: taco-icml
+  title: "The Missing Piece: Standardising for AI-ready Earth Observation Datasets"
+  year: 2025
+  venue: TerraBytes, ICML 2025 Workshop
+  doi: null
+  url: https://openreview.net/pdf?id=HV6F0dsGLK
+  role: co-author (2nd)
+  type: workshop-paper
+  source: public
+  status: confirmar rol
+
+- id: amlec-ccis
+  title: "The Atmospheric Machine Learning Emulation Challenge (AMLEC)"
+  year: 2025
+  venue: ECML PKDD 2025 Workshops, CCIS vol. 2843
+  doi: null
+  url: null
+  role: co-author (2nd)
+  type: paper
+  source: public
+  status: falta DOI
+
+- id: nir-gan
+  title: "Near-Infrared Band Synthesis From Earth Observation Imagery With Learned Location Embeddings and Task-Driven Loss Functions"
+  year: 2025
+  venue: IEEE JSTARS
+  doi: 10.1109/JSTARS.2025.3608941
+  url: https://doi.org/10.1109/JSTARS.2025.3608941
+  role: co-author (3rd)
+  type: paper
+  source: public
+  status: confirmar rol
+
+- id: opensr-srgan
+  title: "OpenSR-SRGAN: A Flexible Super-Resolution Framework for Multispectral Earth Observation Data"
+  year: 2025
+  venue: arXiv
+  doi: null
+  url: https://arxiv.org/abs/2511.10461
+  role: co-author
+  type: preprint
+  source: public
+  status: confirmar rol
+
+- id: sen2sr
+  title: "A radiometrically and spatially consistent super-resolution framework for Sentinel-2"
+  year: 2026
+  venue: Remote Sensing of Environment
+  doi: 10.1016/j.rse.2025.115222
+  url: https://doi.org/10.1016/j.rse.2025.115222
+  role: co-author (2nd)
+  type: paper
+  source: public
+  status: confirmar rol
+
+- id: sen2neon
+  title: "SEN2NEON: Enabling Quantitative Benchmarking of Sentinel-2 Superresolution for All Multispectral Bands"
+  year: 2026
+  venue: IEEE Geoscience and Remote Sensing Letters
+  doi: 10.1109/LGRS.2026.3703947
+  url: https://doi.org/10.1109/LGRS.2026.3703947
+  role: co-author (3rd)
+  type: paper
+  source: public
+  status: confirmar rol
+
+- id: amlec-grsm
+  title: "Evaluating Machine Learning Emulators for Atmospheric Radiative Transfer: The Atmospheric Machine Learning Emulation Challenge"
+  year: 2026
+  venue: IEEE Geoscience and Remote Sensing Magazine
+  doi: 10.1109/MGRS.2026.3703170
+  url: https://doi.org/10.1109/MGRS.2026.3703170
+  role: co-author
+  type: paper
+  source: public
+  status: confirmar rol
+
+# Descartadas a propósito: el ORCID 0009-0001-5408-7055 lista papers de química
+# de 1992-2010 que no son de Julio (homónimo). No van a la web.
+# Tampoco va CloudSEN12 (Sci Data 2022): Julio no aparece en la lista de autores.

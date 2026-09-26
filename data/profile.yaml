@@ -1,0 +1,126 @@
+# Perfil de Julio. Única fuente de verdad para la web.
+# Origen por campo (`_sources`):
+#   legacy  = repo viejo (JulioContrerasH.github.io y repo CV)
+#   public  = fuente pública verificable (ORCID, DOI, GitHub)
+#   missing = por confirmar con Julio
+#   julio   = confirmado por Julio en la entrevista
+
+name: Julio Cesar Contreras Huerta
+display_name: Julio Contreras
+photo: /assets/img/author.jpeg   # julio: usar la actual por ahora; mandará nuevas
+email: contrerasnetk@gmail.com
+location:
+  current: Valencia, España
+  origin: Mala, Cañete, Lima, Perú
+phone: null               # no se publica por ahora
+
+audience:                 # julio: a quién quiere atraer
+  - empresas de tech
+  - reclutadores
+  - investigadores de observación de la Tierra
+  - equipos open source
+goal: que la persona que llegue vea que Julio es un buen elemento (contratar o colaborar)
+
+site:
+  domain: juliocontrerash.github.io   # julio: github.io por ahora; dominio propio más adelante
+  languages: [es, en]
+
+bio:
+  es: >-
+    Ingeniero geógrafo de Mala, Cañete (Perú) y doctorando en la Universitat de
+    València. Empecé en Perú haciendo mapas y datos geográficos para estudios
+    ambientales; después vinieron Andes DataCube y CloudSEN12+. Ahora trabajo en
+    una idea simple: que los datos satelitales sirvan. Limpio nubes, mejoro la
+    resolución, comprimo y empaqueto datos, y los uso para ver agua, glaciares y
+    metano.
+  en: >-
+    Geographical engineer from Mala, Cañete (Peru) and PhD student at the
+    Universitat de València. I started in Peru making maps and geographic data
+    for environmental studies; then came Andes DataCube and CloudSEN12+. Now I
+    work on one simple idea: satellite data that gets used. I clean clouds,
+    improve resolution, compress and package data, and use it to look at water,
+    glaciers and methane.
+  status: borrador
+  tone: informal, primera persona, frases cortas   # julio
+  en_legacy: >-
+    I am a professional with two years in web development and data science,
+    focusing on spatial analysis and big data, especially in scraping and
+    managing remote sensing data. I'm proficient with R, Python, Google Earth
+    Engine, and Planetary Computer, and in web development with React, HUGO,
+    recently shifting to Astro with Tailwind CSS. I aim to transition into
+    academia, where my passion and ambitions drive me to innovate in Deep
+    Learning and Remote Sensing. My work ethic is grounded in responsibility,
+    commitment, proactivity, and efficiency in multidisciplinary teams.
+  legacy_quote: "I envision my code, and then I code my vision - Ada Lovelace"
+
+affiliations:
+  - id: uv
+    org: Universitat de València
+    dept: Parque Científico (PCUV), grupo ISP/IPL
+    role: Investigador
+    dates: 2025-
+    source: julio
+  - id: upch
+    org: Universidad Peruana Cayetano Heredia
+    dept: null            # missing
+    role: Investigador
+    dates: 2023-2024
+    source: legacy
+  - id: cca
+    org: Centro de Competencias del Agua (CCA)
+    role: null            # missing
+    dates: null           # missing
+    source: public
+  - id: asterisk
+    org: Asterisk Labs
+    role: Investigador
+    dates: null            # missing: sigue activo; falta fecha de inicio
+    source: julio
+
+education:
+  - degree: Doctorado en Ingeniería Electrónica (en curso)
+    org: Universitat de València
+    dates: 2025-
+    details: detección multisesor de nubes con deep learning en registros satelitales históricos; director Luis Gómez-Chova
+    source: julio
+  - degree: Máster en Inteligencia Artificial
+    org: Universidad Internacional de La Rioja (UNIR)
+    dates: 2024-2025
+    source: julio
+  - degree: Ingeniero Geógrafo (primer puesto de la promoción 2022)
+    org: Universidad Nacional Mayor de San Marcos
+    dates: 2018-2022
+    source: public         # ORCID + LinkedIn
+
+links:
+  github: https://github.com/JulioContrerasH
+  scholar: https://scholar.google.com/citations?user=eca9RJYAAAAJ
+  orcid: https://orcid.org/0009-0001-5408-7055
+  linkedin: https://www.linkedin.com/in/julio-cesar-contreras-huerta-254030176/
+  x: https://twitter.com/JulioCe67844735
+  cv: https://juliocontrerash.github.io/CV/
+
+_sources:
+  name: legacy
+  display_name: legacy
+  photo: julio
+  email: legacy
+  location.current: julio + public
+  location.origin: julio
+  audience: julio
+  goal: julio
+  site.domain: julio
+  bio: borrador
+  bio.tone: julio
+  affiliations.uv: julio
+  affiliations.upch: legacy
+  affiliations.cca: missing
+  affiliations.asterisk: julio
+  education.unmsm: public
+  education.unir: julio
+  links.github: legacy
+  links.scholar: public
+  links.orcid: public
+  links.linkedin: legacy
+  links.x: legacy
+  links.cv: legacy

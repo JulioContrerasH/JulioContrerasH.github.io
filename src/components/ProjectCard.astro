@@ -1,0 +1,33 @@
+---
+import { linkLabel, stageLabel, t, type Lang, type Project } from '../lib/content';
+
+interface Props {
+  project: Project;
+  lang: Lang;
+}
+
+const { project, lang } = Astro.props;
+const T = t(lang);
+const links = Object.entries(project.links ?? {});
+---
+
+<article class="card" id={project.id}>
+  <h3>
+    {project.title}
+    {project.year && <span class="year">· {project.year}</span>}
+  </h3>
+  <div class="meta">
+    <span class="chip accent">{stageLabel(lang, project.chain_stage)}</span>
+    {project.location && <span class="chip">{project.location}</span>}
+  </div>
+  <p>{project.one_liner}</p>
+  {
+    links.length > 0 && (
+      <div class="links">
+        {links.map(([key, href]) => (
+          <a href={href}>{linkLabel(lang, key)}</a>
+        ))}
+      </div>
+    )
+  }
+</article>

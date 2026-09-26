@@ -1,0 +1,54 @@
+---
+import { profile, t, localizedPath, switchLangPath, type Lang } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+const path = Astro.url.pathname;
+const items = [
+  { key: 'home', href: localizedPath(lang, '/') },
+  { key: 'research', href: localizedPath(lang, '/research') },
+  { key: 'software', href: localizedPath(lang, '/software') },
+  { key: 'publications', href: localizedPath(lang, '/publications') },
+  { key: 'talks', href: localizedPath(lang, '/talks') },
+];
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+---
+
+<header class="header">
+  <div class="wrap header-inner">
+    <a class="brand" href={localizedPath(lang, '/')}>{profile.display_name}</a>
+    <nav aria-label={lang === 'es' ? 'Principal' : 'Main'}>
+      {
+        items.map((item) => (
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            {T.nav[item.key]}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="tools">
+      <a class="icon-btn" href={switchLangPath(lang, path)} aria-label={T.labels.lang_switch}>
+        {T.labels.lang_switch}
+      </a>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('theme-toggle');
+  toggle?.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* sin almacenamiento */
+    }
+  });
+</script>
