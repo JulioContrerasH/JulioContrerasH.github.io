@@ -768,3 +768,88 @@ img {
 
 
 }
+
+/* ---------- detalles de interacción (skill apple-design) ---------- */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html,
+body {
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+.hero h1 {
+  letter-spacing: -0.025em;
+  font-optical-sizing: auto;
+}
+
+.section h2,
+.chapter-card h2,
+.card h3 {
+  letter-spacing: -0.015em;
+}
+
+.btn,
+.icon-btn,
+.hero .actions a,
+.header nav a,
+.footer a {
+  transition: color 160ms ease, border-color 160ms ease, transform 100ms ease-out;
+}
+
+.btn:active,
+.icon-btn:active,
+.hero .actions a:active {
+  transform: scale(0.96);
+}
+
+.card {
+  transition:
+    transform 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out),
+    border-color 240ms var(--ease-out);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  }
+}
+
+.header {
+  backdrop-filter: blur(20px) saturate(180%);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .header {
+    background: var(--bg);
+    backdrop-filter: none;
+  }
+
+  .chapter-card,
+  .globe-tip {
+    backdrop-filter: none;
+    background: #0d0b1a;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .card,
+  .btn,
+  .chip,
+  .icon-btn {
+    border-color: var(--fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .btn:active,
+  .icon-btn:active,
+  .hero .actions a:active {
+    transform: none;
+  }
+}

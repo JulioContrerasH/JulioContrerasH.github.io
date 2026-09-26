@@ -178,6 +178,7 @@
   role: null
   one_liner: Benchmark multi-sensor para detectar y cuantificar fugas de metano.
   one_liner_en: Multi-sensor benchmark to detect and quantify methane leaks.
+  image: /assets/img/projects/methanset.jpg
   links:
     repo: https://github.com/IPL-UV/taco-methaneset
     web: https://ipl-uv.github.io/taco-methaneset/
