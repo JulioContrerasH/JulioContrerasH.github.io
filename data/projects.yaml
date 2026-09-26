@@ -56,7 +56,7 @@
   chain_stage: usar
   include: true
   role: Equipo de datos geográficos (GIS y mapas)
-  one_liner: Mapas y datos geográficos para estudios de impacto ambiental en Perú.
+  one_liner: Mapas y datos geográficos para estudios de impacto ambiental en Perú, en la consultora INSIDEO.
   coords: {lon: -77.0428, lat: -12.0464}   # Lima (oficina INSIDEO), aprox
   location: null            # missing: oficina en Lima, sin confirmar
   links: {}
