@@ -1,5 +1,5 @@
 ---
-import { profile, t, type Lang } from '../../lib/content';
+import { localizedField, profile, t, type Lang } from '../../lib/content';
 
 interface Props {
   lang: Lang;
@@ -7,6 +7,8 @@ interface Props {
 
 const { lang } = Astro.props;
 const T = t(lang);
+const pick = (item: unknown, field: string) =>
+  localizedField(lang, item as Record<string, unknown>, field);
 const L = {
   experience: lang === 'es' ? 'Experiencia' : 'Experience',
   education: lang === 'es' ? 'Educación' : 'Education',
@@ -30,12 +32,12 @@ const L = {
           {
             profile.experience.map((item) => (
               <li>
-                <div class="title">{item.role}</div>
+                <div class="title">{pick(item, 'role')}</div>
                 <div class="meta">
                   {item.org}
                   {item.dates ? ` · ${item.dates}` : ''}
                 </div>
-                {item.details && <div class="meta">{item.details}</div>}
+                {item.details && <div class="meta">{pick(item, 'details')}</div>}
               </li>
             ))
           }
@@ -46,7 +48,7 @@ const L = {
           {
             profile.education.map((item) => (
               <li>
-                <div class="title">{item.degree}</div>
+                <div class="title">{pick(item, 'degree')}</div>
                 <div class="meta">
                   {item.org} · {item.dates}
                 </div>

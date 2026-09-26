@@ -5,7 +5,11 @@
 # chain_stage: limpiar | mejorar | mover-y-guardar | compartir | usar
 # include:     true = va a la web | false = fuera por ahora (decisión de Julio)
 # status:      legacy | public | vault | julio
+# image:       captura o figura real del proyecto (assets locales)
+# footprint:   bbox aproximado [lon_min, lat_min, lon_max, lat_max] para pintar el área
+# global:      cobertura mundial (se pinta el globo entero)
 #
+# Los campos con _en son la versión inglesa (la web es EN por defecto).
 # Decisiones de la ronda 1 (julio): entran todos los papers, TACO sí,
 # CubeXpress sí, Andes DataCube sí; geozl, rumi y ELLIOT fuera por ahora.
 
@@ -14,49 +18,58 @@
 - id: andes-datacube
   order: 8
   title: Andes DataCube
-  year: 2023-2025
+  title_en: Andes DataCube
   type: ground
   chapter: peru
   chain_stage: usar
   include: true
   role: null              # missing: investigador en el consorcio (UPCH)
   one_liner: Cubo de datos de los Andes del Perú a partir de 50 mil imágenes Sentinel-2 y Landsat.
-  coords: {lon: -77.5300, lat: -9.5300}   # Cordillera Blanca, aprox
+  one_liner_en: Data cube of the Peruvian Andes built from 50,000 Sentinel-2 and Landsat images.
+  coords: {lon: -77.53, lat: -9.53}   # Cordillera Blanca, aprox
   location: Andes del Perú
+  location_en: Peruvian Andes
+  footprint: [-81.4, -18.4, -68.6, -0.1]   # Perú, aprox
+  image: /assets/img/projects/andes-datacube.jpg
   links:
     web: https://andesdatacube.github.io/
     repo: https://github.com/andesdatacube
     news: https://ciencias.cayetano.edu.pe/noticias/consorcio-liderado-por-cayetano-heredia-obtiene-financiamiento-de-prociencia-para-el-desarrollo-de-su-proyecto-de-investigacion/
   status: public
-  _missing: [rol, coords]
+  _missing: [rol, coords exactas]
 
 - id: tesis-mss
   order: 9
   title: Recuperación de imágenes Landsat MSS (1972-1999)
-  year: 2024
+  title_en: Landsat MSS image recovery (1972-1999)
   type: ground
   chapter: peru
   chain_stage: mejorar
   include: true
   role: autor (tesis de pregrado UNMSM)
   one_liner: Tesis de pregrado, armonizar Landsat MSS con IA para monitoreo continuo desde 1972.
+  one_liner_en: Bachelor thesis, harmonizing Landsat MSS with AI for continuous monitoring since 1972.
   coords: {lon: -77.0428, lat: -12.0464}   # Lima (UNMSM), aprox
   location: Perú
+  location_en: Peru
+  footprint: [-81.4, -18.4, -68.6, -0.1]   # Perú, aprox
   links:
     thesis: https://cybertesis.unmsm.edu.pe/item/0fe433c3-6934-4d65-a625-25cb55e93431
   status: julio
 
 - id: insideo
-  section: applied
   order: 10
+  section: applied
   title: GIS ambiental en proyectos mineros
-  year: 2022-2023
+  title_en: Environmental GIS in mining projects
   type: ground
   chapter: peru
   chain_stage: usar
   include: true
   role: Equipo de datos geográficos (GIS y mapas)
+  role_en: Geographic data team (GIS and maps)
   one_liner: Mapas y datos geográficos para estudios de impacto ambiental en Perú, en la consultora INSIDEO.
+  one_liner_en: Maps and geographic data for environmental impact studies in Peru, at INSIDEO consultancy.
   coords: {lon: -77.0428, lat: -12.0464}   # Lima (oficina INSIDEO), aprox
   location: null            # missing: oficina en Lima, sin confirmar
   links: {}
@@ -68,13 +81,16 @@
 - id: cloudsen12plus
   order: 1
   title: CloudSEN12+
-  year: 2024
+  title_en: CloudSEN12+
   type: orbit
+  global: true              # dataset de cobertura mundial
   chapter: peru
   chain_stage: limpiar
   include: true
   role: null              # missing: coautor verificado
   one_liner: El dataset más grande de píxeles etiquetados por expertos para nubes en Sentinel-2.
+  one_liner_en: The largest dataset of expert-labeled pixels for cloud and cloud shadow detection in Sentinel-2.
+  image: /assets/img/projects/cloudsen12plus.jpg
   links:
     paper: https://doi.org/10.1016/j.dib.2024.110852
     repo: https://github.com/cloudsen12/dataset
@@ -86,13 +102,15 @@
 - id: sen2naip
   order: 2
   title: SEN2NAIP
-  year: 2024
+  title_en: SEN2NAIP
   type: orbit
   chapter: valencia
   chain_stage: mejorar
   include: true
   role: null
   one_liner: Dataset grande de pares LR-HR Sentinel-2 + NAIP para entrenar superresolución.
+  one_liner_en: Large dataset of Sentinel-2 + NAIP LR-HR pairs for training super-resolution.
+  footprint: [-125, 24, -66, 50]   # Estados Unidos contiguos
   links:
     paper: https://www.nature.com/articles/s41597-024-04214-y
     dataset: https://huggingface.co/datasets/isp-uv-es/SEN2NAIP
@@ -103,13 +121,15 @@
 - id: sen2sr
   order: 3
   title: SEN2SR
-  year: 2026
+  title_en: SEN2SR
   type: orbit
   chapter: valencia
   chain_stage: mejorar
   include: true
   role: null              # missing: coautor y desarrollador; confirmar
   one_liner: Superresolución de Sentinel-2 a 2.5 m sin inventar texturas ni romper los colores.
+  one_liner_en: Sentinel-2 super-resolution to 2.5 m without inventing textures or breaking colors.
+  image: /assets/img/projects/sen2sr.jpg
   links:
     paper: https://doi.org/10.1016/j.rse.2025.115222
     repo: https://github.com/ESAOpenSR/SEN2SR
@@ -121,13 +141,16 @@
 - id: sen2neon
   order: 4
   title: SEN2NEON
-  year: 2026
+  title_en: SEN2NEON
   type: orbit
   chapter: valencia
   chain_stage: mejorar
   include: true
   role: null
   one_liner: Benchmark que compara superresolución contra referencias reales de AVIRIS-NG.
+  one_liner_en: Benchmark that evaluates super-resolution against real AVIRIS-NG references.
+  footprint: [-125, 24, -66, 50]   # sitios NEON en Estados Unidos
+  image: /assets/img/projects/sen2neon.jpg
   links:
     paper: https://doi.org/10.1109/LGRS.2026.3703947
     repo: https://github.com/ESAOpenSR/SEN2NEON
@@ -138,13 +161,14 @@
 - id: methanset
   order: 7
   title: MethaneSET
-  year: 2026
+  title_en: MethaneSET
   type: orbit
   chapter: ahora
   chain_stage: usar
   include: true
   role: null
   one_liner: Benchmark multi-sensor para detectar y cuantificar fugas de metano.
+  one_liner_en: Multi-sensor benchmark to detect and quantify methane leaks.
   links:
     repo: https://github.com/IPL-UV/taco-methaneset
     web: https://ipl-uv.github.io/taco-methaneset/
@@ -154,16 +178,17 @@
 # ---------------------------------------------------------------- Ahora / Asterisk Labs
 
 - id: taco
-  section: software
   order: 5
+  section: software
   title: TACO
-  year: 2025-2026
+  title_en: TACO
   type: orbit
   chapter: ahora
   chain_stage: compartir
   include: true
   role: null              # missing: coautor de la spec y del paper (2º autor); confirmar
   one_liner: Especificación para empaquetar datasets de observación de la Tierra listos para IA.
+  one_liner_en: Specification to package AI-ready Earth Observation datasets.
   links:
     paper: https://ipl-uv.github.io/taco-methaneset/papers/taco-icml-2025.pdf
     repo: https://github.com/asterisk-labs/taco
@@ -173,16 +198,18 @@
   _missing: [rol]
 
 - id: cubexpress
-  section: software
   order: 6
+  section: software
   title: CubeXpress
-  year: 2024-2026
+  title_en: CubeXpress
   type: orbit
   chapter: ahora
   chain_stage: mover-y-guardar
   include: true
   role: null              # missing: ¿creador?
   one_liner: Paquete de Python para bajar cubos de datos satelitales desde GEE.
+  one_liner_en: Python package to download satellite data cubes from GEE.
+  image: /assets/img/projects/cubexpress.png
   links:
     repo: https://github.com/JulioContrerasH/CubeXpress
     pypi: https://pypi.org/project/cubexpress/
@@ -190,16 +217,19 @@
   status: public
   _missing: [rol]
 
+# ---------------------------------------------------------------- Fuera por ahora
+
 - id: geozl
   order: 11
   title: geozl
-  year: 2026
+  title_en: geozl
   type: orbit
   chapter: ahora
   chain_stage: mover-y-guardar
   include: false          # julio: aún no se ha metido de lleno
   role: null
   one_liner: Codecs geoespaciales para comprimir rasters con pérdida controlada.
+  one_liner_en: Geospatial codecs to compress rasters with bounded loss.
   links:
     repo: https://github.com/asterisk-labs/geozl
     pypi: https://pypi.org/project/geozl/
@@ -208,13 +238,14 @@
 - id: rumi
   order: 12
   title: rumi
-  year: 2026
+  title_en: rumi
   type: orbit
   chapter: ahora
   chain_stage: mover-y-guardar
   include: false          # julio: aún no se ha metido de lleno
   role: null
   one_liner: Formato de raster pensado para entrenar modelos, con lecturas por ventana y banda.
+  one_liner_en: Raster format designed for model training, with window and band reads.
   links:
     repo: https://github.com/asterisk-labs/rumi
     pypi: https://pypi.org/project/rumi-eo/
@@ -223,13 +254,14 @@
 - id: elliot-pretrain
   order: 13
   title: ELLIOT pretrain
-  year: 2026
+  title_en: ELLIOT pretrain
   type: orbit
   chapter: ahora
   chain_stage: compartir
   include: false          # julio: fuera
   role: null
   one_liner: Dataset de preentrenamiento en TACO para el proyecto ELLIOT.
+  one_liner_en: TACO pre-training dataset for the ELLIOT project.
   links:
     dataset: https://source.coop/major-tom/elliot-pretrain
   status: public

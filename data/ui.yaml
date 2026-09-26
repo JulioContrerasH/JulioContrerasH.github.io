@@ -32,6 +32,13 @@ es:
     all_projects: Todos los proyectos
     all_publications: Todas las publicaciones
     stage: Etapa
+    open: Abrir
+    globe:
+      points: Proyectos con lugar
+      areas: Cobertura de datasets
+      countries: Países donde he estado
+      satellites: Herramientas en órbita
+      world: Mundial
     stages:
       limpiar: Limpiar
       mejorar: Mejorar
@@ -98,6 +105,13 @@ en:
     all_projects: All projects
     all_publications: All publications
     stage: Stage
+    open: Open
+    globe:
+      points: Projects with a place
+      areas: Dataset coverages
+      countries: Countries I have been to
+      satellites: Tools in orbit
+      world: Worldwide
     stages:
       limpiar: Clean
       mejorar: Improve

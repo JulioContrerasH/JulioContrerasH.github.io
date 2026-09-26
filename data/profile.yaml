@@ -7,7 +7,7 @@
 
 name: Julio Cesar Contreras Huerta
 display_name: Julio Contreras
-photo: /assets/img/author.jpeg   # julio: usar la actual por ahora; mandará nuevas
+photo: /assets/img/julio.jpg   # julio: avatar de GitHub por ahora; mandará una foto nueva
 email: contrerasnetk@gmail.com
 location:
   current: Valencia, España
@@ -79,15 +79,19 @@ affiliations:
 
 education:
   - degree: Doctorado en Ingeniería Electrónica (en curso)
+    degree_en: PhD in Electronic Engineering (ongoing)
     org: Universitat de València
     dates: 2025-
     details: detección multisesor de nubes con deep learning en registros satelitales históricos; director Luis Gómez-Chova
+    details_en: multi-sensor cloud detection with deep learning in historical satellite records; advisor Luis Gómez-Chova
     source: julio
   - degree: Máster en Inteligencia Artificial
+    degree_en: MSc in Artificial Intelligence
     org: Universidad Internacional de La Rioja (UNIR)
     dates: 2024-2025
     source: julio
   - degree: Ingeniero Geógrafo (primer puesto de la promoción 2022)
+    degree_en: Geographical Engineer (top of class 2022)
     org: Universidad Nacional Mayor de San Marcos
     dates: 2018-2022
     source: public         # ORCID + LinkedIn
@@ -95,23 +99,31 @@ education:
 experience:
   - org: Asterisk Labs
     role: Investigador
+    role_en: Researcher
     dates: null            # missing: sigue activo; falta fecha de inicio
     details: Herramientas abiertas de observación de la Tierra y clima.
+    details_en: Open tools for Earth Observation and climate.
     source: julio
   - org: Universitat de València (Parque Científico, ISP/IPL)
     role: Investigador
+    role_en: Researcher
     dates: 2025-
     details: Doctorado en detección multisesor de nubes en registros históricos.
+    details_en: PhD on multi-sensor cloud detection in historical records.
     source: julio
   - org: Universidad Peruana Cayetano Heredia
     role: Investigador
+    role_en: Researcher
     dates: 2023-2024
     details: Andes DataCube, cubos de datos satelitales y detección de nubes.
+    details_en: Andes DataCube, satellite data cubes and cloud detection.
     source: legacy
   - org: INSIDEO S.A.C.
     role: Equipo de datos geográficos (GIS y mapas)
+    role_en: Geographic data team (GIS and maps)
     dates: 2022-2023
     details: Mapas y datos para estudios de impacto ambiental en Perú.
+    details_en: Maps and data for environmental impact studies in Peru.
     source: legacy
 
 skills:

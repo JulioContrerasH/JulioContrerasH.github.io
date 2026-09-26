@@ -11,6 +11,7 @@ import {
 import Globe from '../Globe.astro';
 import ProjectCard from '../ProjectCard.astro';
 import PublicationList from '../PublicationList.astro';
+import StageIcon from '../StageIcon.astro';
 
 interface Props {
   lang: Lang;
@@ -26,10 +27,12 @@ const chapters = [
 ] as const;
 const featured = research.slice(0, 4);
 const latest = publications.slice(0, 4);
+const stages = ['limpiar', 'mejorar', 'mover-y-guardar', 'compartir', 'usar'];
+const stageLabels = T.labels.stages as Record<string, string>;
 ---
 
 <div class="stage">
-  <Globe />
+  <Globe lang={lang} />
   <section class="hero">
     <div class="wrap">
       <div class="hero-inner">
@@ -74,6 +77,22 @@ const latest = publications.slice(0, 4);
 </div>
 
 <div class="solid" id="solid">
+  <div class="wrap" style="padding-top: 34px">
+    <div class="chain">
+      {
+        stages.map((stage, index) => (
+          <>
+            <span class="chain-step">
+              <StageIcon stage={stage} size={20} />
+              {stageLabels[stage]}
+            </span>
+            {index < stages.length - 1 && <span class="chain-arrow">→</span>}
+          </>
+        ))
+      }
+    </div>
+  </div>
+
   <section class="section">
     <div class="wrap">
       <h2>{T.sections.research}</h2>

@@ -1,5 +1,6 @@
 ---
-import { linkLabel, stageLabel, t, type Lang, type Project } from '../lib/content';
+import { linkLabel, localizedField, stageLabel, t, type Lang, type Project } from '../lib/content';
+import StageIcon from './StageIcon.astro';
 
 interface Props {
   project: Project;
@@ -9,25 +10,44 @@ interface Props {
 const { project, lang } = Astro.props;
 const T = t(lang);
 const links = Object.entries(project.links ?? {});
+const pick = (field: string) =>
+  localizedField(lang, project as unknown as Record<string, unknown>, field);
+const title = pick('title');
+const oneLiner = pick('one_liner');
+const location = pick('location');
 ---
 
 <article class="card" id={project.id}>
-  <h3>
-    {project.title}
-    {project.year && <span class="year">· {project.year}</span>}
-  </h3>
-  <div class="meta">
-    <span class="chip accent">{stageLabel(lang, project.chain_stage)}</span>
-    {project.location && <span class="chip">{project.location}</span>}
-  </div>
-  <p>{project.one_liner}</p>
   {
-    links.length > 0 && (
-      <div class="links">
-        {links.map(([key, href]) => (
-          <a href={href}>{linkLabel(lang, key)}</a>
-        ))}
+    project.image ? (
+      <img class="thumb" src={project.image} alt={title} loading="lazy" />
+    ) : (
+      <div class="thumb placeholder" aria-hidden="true">
+        <StageIcon stage={project.chain_stage} size={72} />
       </div>
     )
   }
+  <div class="body">
+    <h3>
+      {title}
+      {project.year && <span class="year">· {project.year}</span>}
+    </h3>
+    <div class="meta">
+      <span class="chip accent">
+        <StageIcon stage={project.chain_stage} size={14} />
+        {stageLabel(lang, project.chain_stage)}
+      </span>
+      {location && <span class="chip">{location}</span>}
+    </div>
+    <p>{oneLiner}</p>
+    {
+      links.length > 0 && (
+        <div class="links">
+          {links.map(([key, href]) => (
+            <a href={href}>{linkLabel(lang, key)}</a>
+          ))}
+        </div>
+      )
+    }
+  </div>
 </article>

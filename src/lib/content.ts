@@ -18,17 +18,21 @@ export interface Affiliation {
 
 export interface Education {
   degree: string;
+  degree_en?: string | null;
   org: string;
   dates?: string | null;
   details?: string | null;
+  details_en?: string | null;
   source?: string;
 }
 
 export interface Experience {
   org: string;
   role: string;
+  role_en?: string | null;
   dates?: string | null;
   details?: string | null;
+  details_en?: string | null;
   source?: string;
 }
 
@@ -64,6 +68,7 @@ export interface Project {
   id: string;
   order: number;
   title: string;
+  title_en?: string | null;
   year: string | number | null;
   type: 'ground' | 'orbit';
   chapter: 'peru' | 'valencia' | 'ahora';
@@ -71,9 +76,15 @@ export interface Project {
   include: boolean;
   section?: 'research' | 'software' | 'applied';
   role: string | null;
+  role_en?: string | null;
   one_liner: string;
+  one_liner_en?: string | null;
   coords: { lon: number; lat: number } | null;
   location: string | null;
+  location_en?: string | null;
+  image?: string | null;
+  footprint?: [number, number, number, number] | null;
+  global?: boolean;
   links: Record<string, string>;
   status: string;
 }
@@ -144,6 +155,19 @@ export function linkLabel(lang: Lang, key: string): string {
 
 export function chapterProjects(chapter: Project['chapter']): Project[] {
   return projects.filter((p) => p.chapter === chapter);
+}
+
+export function localizedField(
+  lang: Lang,
+  item: Record<string, unknown>,
+  field: string
+): string {
+  if (lang === 'en') {
+    const en = item[`${field}_en`];
+    if (typeof en === 'string' && en.length > 0) return en;
+  }
+  const value = item[field];
+  return typeof value === 'string' ? value : '';
 }
 
 export function otherLang(lang: Lang): Lang {

@@ -36,7 +36,8 @@ La foto va en `public/assets/img/` (hoy `author.jpeg` desde `static/img/`, ver `
 - `src/components/` — tarjetas, listas, globo, CV.
 - `src/pages/` — rutas EN (por defecto); `src/pages/es/` — rutas ES.
 - `scripts/globe_texture.py` — regenera la textura de puntos del globo.
-- `scripts/ne_110m_land.geojson` — costas de Natural Earth para esa textura.
+- `scripts/highlight_countries.py` — extrae los países resaltados a `public/assets/geo/countries.json`.
+- `scripts/ne_110m_land.geojson` y `ne_110m_admin_0_countries.geojson` — Natural Earth, base de los dos scripts.
 
 ## Publicar
 

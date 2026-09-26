@@ -1,5 +1,13 @@
 ---
-import { projects } from '../lib/content';
+import { localizedField, projects, t, type Lang } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const T = t(lang);
+const globeLabels = (T.labels as unknown as { globe: Record<string, string> }).globe;
 
 const firstLink = (links: Record<string, string>) => Object.values(links ?? {})[0] ?? null;
 
@@ -7,9 +15,9 @@ const ground = projects
   .filter((p) => p.type === 'ground' && p.coords)
   .map((p) => ({
     id: p.id,
-    title: p.title,
+    title: localizedField(lang, p as unknown as Record<string, unknown>, 'title'),
     year: p.year ? String(p.year) : '',
-    location: p.location ?? '',
+    location: localizedField(lang, p as unknown as Record<string, unknown>, 'location'),
     lat: p.coords!.lat,
     lng: p.coords!.lon,
     url: firstLink(p.links),
@@ -19,20 +27,85 @@ const orbit = projects
   .filter((p) => p.type === 'orbit')
   .map((p) => ({
     id: p.id,
-    title: p.title,
+    title: localizedField(lang, p as unknown as Record<string, unknown>, 'title'),
     year: p.year ? String(p.year) : '',
     url: firstLink(p.links),
+  }));
+
+const footprint = (p: (typeof projects)[number]) => {
+  const [w, s, e, n] = p.footprint!;
+  return {
+    type: 'Feature',
+    properties: {
+      id: p.id,
+      title: localizedField(lang, p as unknown as Record<string, unknown>, 'title'),
+      year: p.year ? String(p.year) : '',
+      location: localizedField(lang, p as unknown as Record<string, unknown>, 'location'),
+      url: firstLink(p.links),
+      kind: 'area',
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [w, s],
+          [e, s],
+          [e, n],
+          [w, n],
+          [w, s],
+        ],
+      ],
+    },
+  };
+};
+
+const areas = projects.filter((p) => p.footprint).map(footprint);
+
+const globalAreas = projects
+  .filter((p) => p.global)
+  .map((p) => ({
+    type: 'Feature',
+    properties: {
+      id: p.id,
+      title: localizedField(lang, p as unknown as Record<string, unknown>, 'title'),
+      year: p.year ? String(p.year) : '',
+      location: globeLabels.world,
+      url: firstLink(p.links),
+      kind: 'global',
+      global: true,
+    },
+    geometry: {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-180, -85],
+          [180, -85],
+          [180, 85],
+          [-180, 85],
+          [-180, -85],
+        ],
+      ],
+    },
   }));
 
 const data = {
   ground,
   orbit,
+  areas: [...areas, ...globalAreas],
+  countriesUrl: '/assets/geo/countries.json',
+  open: T.labels.open,
   arc: { startLat: -12.055, startLng: -77.083, endLat: 39.472, endLng: -0.376 },
 };
 ---
 
 <div id="globe" aria-hidden="true"></div>
 <div class="globe-tip" role="status"></div>
+<div class="globe-legend" aria-hidden="true">
+  <span class="item"><span class="mark point"></span>{globeLabels.points}</span>
+  <span class="item"><span class="mark area"></span>{globeLabels.areas}</span>
+  <span class="item"><span class="mark country"></span>{globeLabels.countries}</span>
+  <span class="item"><span class="mark sat"></span>{globeLabels.satellites}</span>
+</div>
 <script type="application/json" id="globe-data" set:html={JSON.stringify(data)} />
 
 <script>
@@ -69,7 +142,7 @@ const data = {
       if (item.url) {
         const link = document.createElement('a');
         link.href = item.url;
-        link.textContent = 'Abrir';
+        link.textContent = data.open ?? 'Open';
         link.target = '_blank';
         link.rel = 'noopener';
         tip.append(link);
@@ -80,6 +153,15 @@ const data = {
     };
 
     const hideTip = () => tip.classList.remove('visible');
+
+    const capColor = (kind: string) =>
+      kind === 'academic'
+        ? 'rgba(124, 58, 237, 0.42)'
+        : kind === 'visited'
+          ? 'rgba(96, 165, 250, 0.26)'
+          : kind === 'global'
+            ? 'rgba(168, 139, 250, 0.09)'
+            : 'rgba(124, 58, 237, 0.3)';
 
     const boot = async () => {
       const [{ default: Globe }, THREE] = await Promise.all([import('globe.gl'), import('three')]);
@@ -96,9 +178,22 @@ const data = {
         .backgroundColor('rgba(0,0,0,0)')
         .pointAltitude(0.012)
         .pointRadius(small ? 0.26 : 0.2)
-        .pointColor(() => '#a78bfa')
+        .pointColor(() => '#a88bfa')
         .pointsMerge(false)
-        .pointsData(data.ground ?? []);
+        .pointsData(data.ground ?? [])
+        .polygonAltitude((feature: { properties: { global?: boolean } }) =>
+          feature.properties.global ? 0.001 : 0.006
+        )
+        .polygonCapColor((feature: { properties: { kind: string } }) => capColor(feature.properties.kind))
+        .polygonSideColor(() => 'rgba(124, 58, 237, 0.1)')
+        .polygonStrokeColor(() => 'rgba(168, 139, 250, 0.55)')
+        .polygonsTransitionDuration(300)
+        .ringColor(() => (progress: number) => `rgba(168, 139, 250, ${Math.sqrt(1 - progress)})`)
+        .ringMaxRadius(3.2)
+        .ringPropagationSpeed(1.6)
+        .ringRepeatPeriod(reduced ? 0 : 1400)
+        .ringAltitude(0.002)
+        .ringsData(reduced ? [] : (data.ground ?? []));
 
       globe.globeMaterial().transparent = true;
 
@@ -111,10 +206,34 @@ const data = {
       const heroView = { lat: 18, lng: -35, altitude: 2.1 };
       globe.pointOfView(heroView, 0);
 
+      if (data.countriesUrl) {
+        try {
+          const response = await fetch(data.countriesUrl);
+          const countries = await response.json();
+          globe.polygonsData([...(data.areas ?? []), ...(countries.features ?? [])]);
+        } catch {
+          globe.polygonsData(data.areas ?? []);
+        }
+      } else {
+        globe.polygonsData(data.areas ?? []);
+      }
+
+      globe.onPolygonHover((polygon: unknown) => {
+        const props = (polygon as { properties?: Record<string, unknown> } | null)?.properties;
+        if (props) showTip(props as { title: string; year: string; location: string; url: string });
+        else hideTip();
+        container.style.cursor = polygon ? 'pointer' : 'default';
+      });
+
+      globe.onPolygonClick((polygon: unknown) => {
+        const url = (polygon as { properties?: { url?: string } } | null)?.properties?.url;
+        if (url) window.open(url, '_blank', 'noopener');
+      });
+
       if (data.arc) {
         globe
           .arcsData([data.arc])
-          .arcColor(['#a78bfa', '#60a5fa'])
+          .arcColor(['#a88bfa', '#60a5fa'])
           .arcDashLength(0.4)
           .arcDashGap(1.4)
           .arcDashAnimateTime(reduced ? 0 : 3200)
@@ -147,6 +266,31 @@ const data = {
             object.position.set(coords.x, coords.y, coords.z);
           });
 
+        const orbitPaths = satellites.map(
+          (sat: { inclination: number; phase: number; altitude: number }) => {
+            const points: [number, number, number][] = [];
+            for (let i = 0; i <= 72; i++) {
+              const t = (i / 72) * Math.PI * 2 + sat.phase;
+              const lat = Math.sin(t) * sat.inclination * 57.3;
+              const lng = ((((t * 57.3) % 360) + 540) % 360) - 180;
+              points.push([lat, lng, sat.altitude]);
+            }
+            return { points };
+          }
+        );
+
+        globe
+          .pathsData(orbitPaths)
+          .pathPoints((path: { points: [number, number, number][] }) => path.points)
+          .pathPointLat((point: [number, number, number]) => point[0])
+          .pathPointLng((point: [number, number, number]) => point[1])
+          .pathPointAlt((point: [number, number, number]) => point[2])
+          .pathColor(() => 'rgba(168, 139, 250, 0.28)')
+          .pathStroke(0.24)
+          .pathDashLength(0.015)
+          .pathDashGap(0.012)
+          .pathDashAnimateTime(reduced ? 0 : 6000);
+
         const customHover = (
           globe as unknown as {
             onCustomLayerHover?: (fn: (sat: unknown) => void) => void;
@@ -161,7 +305,8 @@ const data = {
       }
 
       globe.onPointHover((point: unknown) => {
-        if (point) showTip(point as { title: string; year: string; location: string; url: string | null });
+        if (point)
+          showTip(point as { title: string; year: string; location: string; url: string | null });
         else hideTip();
         container.style.cursor = point ? 'pointer' : 'default';
       });
