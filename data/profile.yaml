@@ -137,6 +137,36 @@ languages:
   - name: English
     level: B2 (PTE Academic 68)
 
+certificates:            # del CV viejo; con link
+  - name: Deep Learning Specialization
+    year: 2024
+    url: https://coursera.org/share/274191a924014fd94452a47d38b6871b
+  - name: Big Data Specialization
+    year: 2024
+    url: https://coursera.org/share/66e51844490e2b02efd98bd3023f5f62
+  - name: IBM Full Stack Software Developer
+    year: 2024
+    url: https://coursera.org/share/e0e1243d55869e9d982cc12ce65b241a
+  - name: Deep learning applied to Earth Observation
+    year: 2023
+    url: https://drive.google.com/file/d/1p-e28zFYd_2XIZmLExseeo255j32Wkvt/view
+  - name: Machine Learning with Python
+    year: 2024
+    url: https://www.udemy.com/certificate/UC-1dae2dcb-1220-46f5-ae33-33dda00dc03e/
+  - name: ArcGIS Pro
+    year: 2022
+    url: https://drive.google.com/file/d/1v_UqFQNBCNX8FG78KNEI-s79eXVzkVaM/view
+  - name: Fundamentals of GIS
+    year: 2020
+    url: https://coursera.org/share/76f8726f343e1e45f8e14d32042393a7
+  - name: QGIS
+    year: 2019
+    url: https://drive.google.com/file/d/1ODQMpskr14p51Ys-5DT5nvJs927Q456s/view
+
+interests:
+  es: [Voluntariado, Senderismo, Moto, Correr, Fitness, Gatos]
+  en: [Volunteering, Hiking, Motorcycling, Running, Fitness, Cats]
+
 links:
   github: https://github.com/JulioContrerasH
   scholar: https://scholar.google.com/citations?user=eca9RJYAAAAJ

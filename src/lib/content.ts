@@ -46,6 +46,12 @@ export interface LanguageSkill {
   level: string;
 }
 
+export interface Certificate {
+  name: string;
+  year: number;
+  url?: string | null;
+}
+
 export interface Profile {
   name: string;
   display_name: string;
@@ -61,6 +67,8 @@ export interface Profile {
   experience: Experience[];
   skills: SkillGroup[];
   languages: LanguageSkill[];
+  certificates: Certificate[];
+  interests: { es: string[]; en: string[] };
   links: Record<string, string | null>;
 }
 

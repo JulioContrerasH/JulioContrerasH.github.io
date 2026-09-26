@@ -12,6 +12,10 @@ interface Props {
 const { lang, title } = Astro.props;
 const T = t(lang);
 const pageTitle = title ? `${title} · ${T.site.title}` : T.site.title;
+const path = Astro.url.pathname;
+const urlEs = lang === 'es' ? path : path === '/' ? '/es/' : `/es${path}`;
+const urlEn = lang === 'en' ? path : path.replace(/^\/es/, '') || '/';
+const canonical = new URL(path, Astro.site);
 ---
 
 <!doctype html>
@@ -23,6 +27,19 @@ const pageTitle = title ? `${title} · ${T.site.title}` : T.site.title;
     <meta name="color-scheme" content="light dark" />
     <title>{pageTitle}</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={new URL(urlEn, Astro.site)} />
+    <link rel="alternate" hreflang="es" href={new URL(urlEs, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(urlEn, Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={T.site.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/assets/img/og.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={T.site.description} />
+    <meta name="twitter:image" content={new URL('/assets/img/og.png', Astro.site)} />
     <script is:inline>
       (() => {
         try {
@@ -45,14 +62,26 @@ const pageTitle = title ? `${title} · ${T.site.title}` : T.site.title;
     <script>
       const header = document.querySelector('.header');
       const solid = document.querySelector('#solid');
-      if (header && solid) {
-        const check = () => {
+      if (header) {
+        const checkSolid = () => {
+          if (!solid) return;
           const top = solid.getBoundingClientRect().top;
           header.classList.toggle('on-dark', top > 64);
         };
-        check();
-        addEventListener('scroll', check, { passive: true });
-        addEventListener('resize', check, { passive: true });
+        const checkScrolled = () => {
+          header.classList.toggle('scrolled', window.scrollY > 8);
+        };
+        checkSolid();
+        checkScrolled();
+        addEventListener(
+          'scroll',
+          () => {
+            checkSolid();
+            checkScrolled();
+          },
+          { passive: true }
+        );
+        addEventListener('resize', checkSolid, { passive: true });
       }
     </script>
   </body>

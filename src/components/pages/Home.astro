@@ -27,7 +27,6 @@ const chapters = [
 ] as const;
 const featured = research.slice(0, 4);
 const latest = publications.slice(0, 4);
-const location = profile.location as unknown as Record<string, unknown>;
 const pick = (item: unknown, field: string) =>
   localizedField(lang, item as Record<string, unknown>, field);
 const origin = pick(profile.location, 'origin');

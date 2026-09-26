@@ -130,6 +130,13 @@ const data = {
 <div id="globe-bg" aria-hidden="true"></div>
 <div id="globe" aria-hidden="true"></div>
 <div class="globe-tip" role="status"></div>
+<p class="sr-only">
+  {
+    lang === 'es'
+      ? 'El globo es decorativo. Los mismos proyectos están listados en la página de Investigación.'
+      : 'The globe is decorative. The same projects are listed on the Research page.'
+  }
+</p>
 <script type="application/json" id="globe-data" set:html={JSON.stringify(data)} />
 
 <script>
@@ -139,14 +146,16 @@ const data = {
 
   if (container && dataEl && tip) {
     const data = JSON.parse(dataEl.textContent || '{}');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const small = matchMedia('(max-width: 720px)').matches;
+    let reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let small = matchMedia('(max-width: 720px)').matches;
     const saveData = (navigator as { connection?: { saveData?: boolean } }).connection?.saveData;
 
     let pointer = { x: 0, y: 0 };
+    let pointerMoved = false;
     addEventListener(
       'pointermove',
       (event) => {
+        pointerMoved = true;
         pointer = { x: event.clientX, y: event.clientY };
       },
       { passive: true }
@@ -159,6 +168,7 @@ const data = {
       lines?: string[];
       url?: string | null;
     }) => {
+      if (!pointerMoved) return;
       tip.textContent = '';
       const strong = document.createElement('strong');
       strong.textContent = item.year ? `${item.title} · ${item.year}` : item.title;
@@ -177,12 +187,10 @@ const data = {
         tip.append(span);
       }
       if (item.url) {
-        const link = document.createElement('a');
-        link.href = item.url;
-        link.textContent = data.open ?? 'Open';
-        link.target = '_blank';
-        link.rel = 'noopener';
-        tip.append(link);
+        const hint = document.createElement('span');
+        hint.className = 'tip-hint';
+        hint.textContent = data.open ?? 'Open';
+        tip.append(hint);
       }
       tip.style.left = `${pointer.x}px`;
       tip.style.top = `${pointer.y}px`;
@@ -379,6 +387,19 @@ const data = {
       controls.autoRotate = !reduced;
       controls.autoRotateSpeed = 0.35;
 
+      matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (event) => {
+        reduced = event.matches;
+        controls.autoRotate = !reduced;
+      });
+
+      matchMedia('(max-width: 720px)').addEventListener('change', (event) => {
+        small = event.matches;
+        globe
+          .pointRadius(small ? 0.26 : 0.2)
+          .labelSize(small ? 0.75 : 0.6)
+          .labelDotRadius(small ? 0.3 : 0.24);
+      });
+
       const heroView = { lat: 18, lng: -35, altitude: 2.1 };
       globe.pointOfView(heroView, 0);
 
@@ -518,7 +539,7 @@ const data = {
         globe.onCustomLayerHover((item: unknown) => {
           if (item) {
             const d = item as { title: string; year?: string; url?: string | null };
-            showTip({ title: d.title, year: d.year ?? '', lines: d.url ? [] : [] });
+            showTip({ title: d.title, year: d.year ?? '', url: d.url ?? null });
           } else {
             hideTip();
           }
@@ -559,7 +580,7 @@ const data = {
         if (!reduced) {
           let last = 0;
           const tick = (now: number) => {
-            if (now - last > 110) {
+            if (now - last > 40) {
               last = now;
               globe.customLayerData([...layer]);
             }

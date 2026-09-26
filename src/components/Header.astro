@@ -16,7 +16,11 @@ const items = [
   { key: 'talks', href: localizedPath(lang, '/talks') },
   { key: 'cv', href: localizedPath(lang, '/cv') },
 ];
-const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+const isActive = (href: string) => {
+  const home = localizedPath(lang, '/');
+  if (href === home) return path === href;
+  return path.startsWith(href);
+};
 ---
 
 <header class="header">
@@ -32,16 +36,32 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       }
     </nav>
     <div class="tools">
-      <a class="icon-btn" href={switchLangPath(lang, path)} aria-label={T.labels.lang_switch}>
+      <a
+        class="icon-btn"
+        href={switchLangPath(lang, path)}
+        aria-label={lang === 'es' ? 'Switch to English' : 'Cambiar a español'}
+        title={lang === 'es' ? 'Switch to English' : 'Cambiar a español'}
+      >
         {T.labels.lang_switch}
       </a>
-      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Theme">◐</button>
+      <button
+        class="icon-btn"
+        id="theme-toggle"
+        type="button"
+        aria-label={lang === 'es' ? 'Cambiar de tema' : 'Switch theme'}
+        aria-pressed="false"
+      >
+        ◐
+      </button>
     </div>
   </div>
 </header>
 
 <script>
   const toggle = document.getElementById('theme-toggle');
+  const syncPressed = () => {
+    toggle?.setAttribute('aria-pressed', document.documentElement.dataset.theme === 'dark' ? 'true' : 'false');
+  };
   toggle?.addEventListener('click', () => {
     const root = document.documentElement;
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -51,5 +71,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     } catch {
       /* sin almacenamiento */
     }
+    syncPressed();
   });
+  syncPressed();
 </script>

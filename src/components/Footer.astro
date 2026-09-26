@@ -1,12 +1,11 @@
 ---
-import { localizedPath, profile, t, type Lang } from '../lib/content';
+import { localizedPath, profile, type Lang } from '../lib/content';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-const T = t(lang);
 const links = [
   { key: 'github', label: 'GitHub' },
   { key: 'scholar', label: 'Google Scholar' },
