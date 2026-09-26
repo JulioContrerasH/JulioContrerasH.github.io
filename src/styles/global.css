@@ -766,31 +766,5 @@ img {
     scroll-behavior: auto;
   }
 
-  /* ---------- cadena de etapas ---------- */
 
-.chain {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 14px;
-  margin: 8px 0 28px;
 }
-
-.chain-step {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.chain-step .stage-icon {
-  color: var(--accent);
-  font-size: 20px;
-}
-
-.chain-arrow {
-  color: var(--border);
-  font-size: 1rem;
-}
-

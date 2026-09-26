@@ -15,8 +15,6 @@ const L = {
   skills: lang === 'es' ? 'Habilidades' : 'Skills',
   languages: lang === 'es' ? 'Idiomas' : 'Languages',
   links: lang === 'es' ? 'Enlaces' : 'Links',
-  cvOnline: lang === 'es' ? 'CV online' : 'Online CV',
-  fullCv: lang === 'es' ? 'CV completo' : 'Full CV',
 };
 ---
 
@@ -83,11 +81,6 @@ const L = {
 
         <h2>{L.links}</h2>
         <ul class="list">
-          {profile.links.cv && (
-            <li>
-              <a href={profile.links.cv}>{L.fullCv}</a>
-            </li>
-          )}
           {profile.links.linkedin && (
             <li>
               <a href={profile.links.linkedin}>LinkedIn</a>

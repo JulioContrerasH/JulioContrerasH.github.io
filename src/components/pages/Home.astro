@@ -12,7 +12,6 @@ import {
 import Globe from '../Globe.astro';
 import ProjectCard from '../ProjectCard.astro';
 import PublicationList from '../PublicationList.astro';
-import StageIcon from '../StageIcon.astro';
 
 interface Props {
   lang: Lang;
@@ -28,11 +27,11 @@ const chapters = [
 ] as const;
 const featured = research.slice(0, 4);
 const latest = publications.slice(0, 4);
-const stages = ['limpiar', 'mejorar', 'mover-y-guardar', 'compartir', 'usar'];
-const stageLabels = T.labels.stages as Record<string, string>;
 const location = profile.location as unknown as Record<string, unknown>;
 const pick = (item: unknown, field: string) =>
   localizedField(lang, item as Record<string, unknown>, field);
+const origin = pick(profile.location, 'origin');
+const current = pick(profile.location, 'current');
 ---
 
 <div class="stage">
@@ -42,14 +41,14 @@ const pick = (item: unknown, field: string) =>
       <div class="hero-inner">
         <img class="portrait" src={profile.photo} alt={profile.name} width="760" height="714" />
         <p class="eyebrow">
-          {localizedField(lang, location, 'origin')} → {localizedField(lang, location, 'current')}
+          {lang === 'es' ? `De ${origin} a ${current}` : `From ${origin} to ${current}`}
         </p>
         <h1>{profile.display_name}</h1>
         <p class="line">{T.hero.line}</p>
         <p class="sub">{bio}</p>
         <div class="actions">
           <a href={`mailto:${profile.email}`}>{T.hero.email}</a>
-          {profile.links.cv && <a href={profile.links.cv}>{T.hero.cv}</a>}
+          <a href={localizedPath(lang, '/cv')}>{T.hero.cv}</a>
           {profile.links.github && <a href={profile.links.github}>GitHub</a>}
           {profile.links.scholar && <a href={profile.links.scholar}>Scholar</a>}
         </div>
@@ -84,22 +83,6 @@ const pick = (item: unknown, field: string) =>
 </div>
 
 <div class="solid" id="solid">
-  <div class="wrap" style="padding-top: 34px">
-    <div class="chain">
-      {
-        stages.map((stage, index) => (
-          <>
-            <span class="chain-step">
-              <StageIcon stage={stage} size={20} />
-              {stageLabels[stage]}
-            </span>
-            {index < stages.length - 1 && <span class="chain-arrow">→</span>}
-          </>
-        ))
-      }
-    </div>
-  </div>
-
   <section class="section">
     <div class="wrap">
       <h2>{T.sections.research}</h2>

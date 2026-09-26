@@ -72,18 +72,18 @@ const coverageLabels = [...labelGroups.entries()].flatMap(([key, group]) => {
   }));
 });
 
-// Vuelos con estela: Lima → Valencia y Valencia → Viena (Living Planet Symposium).
+// Vuelos con estela: Lima a Valencia y Valencia a Viena (Living Planet Symposium).
 const flights = [
   {
     id: 'lima-valencia',
-    title: 'Lima → Valencia',
+    title: lang === 'es' ? 'Vuelo Lima a Valencia' : 'Lima to Valencia',
     from: { lat: -12.05, lng: -77.04 },
     to: { lat: 39.47, lng: -0.38 },
     speed: 0.045,
   },
   {
     id: 'valencia-viena',
-    title: 'Valencia → Vienna',
+    title: lang === 'es' ? 'Vuelo Valencia a Viena' : 'Valencia to Vienna',
     from: { lat: 39.47, lng: -0.38 },
     to: { lat: 48.21, lng: 16.37 },
     speed: 0.06,

@@ -125,7 +125,14 @@ const projectsAll: Project[] = parse(projectsRaw);
 
 export const profile: Profile = parse(profileRaw);
 export const ui = parse(uiRaw) as Record<Lang, UiStrings>;
-export const projects = projectsAll.filter((p) => p.include).sort((a, b) => a.order - b.order);
+export function projectYear(project: Project): number {
+  const years = String(project.year ?? '').match(/\d{4}/g);
+  return years ? Number(years[years.length - 1]) : 0;
+}
+
+export const projects = projectsAll
+  .filter((p) => p.include)
+  .sort((a, b) => projectYear(b) - projectYear(a) || a.order - b.order);
 export const research = projects.filter((p) => !p.section || p.section === 'research');
 export const software = projects.filter((p) => p.section === 'software');
 export const applied = projects.filter((p) => p.section === 'applied');
@@ -141,11 +148,6 @@ export const orbitProjects = projects.filter((p) => p.type === 'orbit');
 
 export function t(lang: Lang): UiStrings {
   return ui[lang];
-}
-
-export function stageLabel(lang: Lang, stage: string): string {
-  const stages = (ui[lang].labels as { stages: Record<string, string> }).stages;
-  return stages[stage] ?? stage;
 }
 
 export function linkLabel(lang: Lang, key: string): string {

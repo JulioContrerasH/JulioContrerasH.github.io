@@ -99,13 +99,6 @@ education:
     source: public         # ORCID + LinkedIn
 
 experience:
-  - org: Asterisk Labs
-    role: Investigador
-    role_en: Researcher
-    dates: null            # missing: sigue activo; falta fecha de inicio
-    details: Herramientas abiertas de observación de la Tierra y clima.
-    details_en: Open tools for Earth Observation and climate.
-    source: julio
   - org: Universitat de València (Parque Científico, ISP/IPL)
     role: Investigador
     role_en: Researcher
@@ -130,11 +123,13 @@ experience:
 
 skills:
   - family: Programming
-    items: [Python, R, JavaScript, HTML, CSS]
+    items: [Python, R, JavaScript, SQL, HTML, CSS]
   - family: GIS & remote sensing
-    items: [Google Earth Engine, ArcGIS Pro, QGIS, PostGIS, GeoServer, Leaflet]
-  - family: Tools
-    items: [Git, Power BI, Adobe]
+    items: [Google Earth Engine, ArcGIS Pro, QGIS, GDAL, PostGIS, GeoServer, Leaflet, STAC, Cloud Optimized GeoTIFF]
+  - family: Deep learning
+    items: [PyTorch, scikit-learn, Hugging Face, ONNX]
+  - family: Tools & infra
+    items: [Git, GitHub Actions, Linux, Astro, React]
 
 languages:
   - name: Spanish
@@ -148,7 +143,7 @@ links:
   orcid: https://orcid.org/0009-0001-5408-7055
   linkedin: https://www.linkedin.com/in/julio-cesar-contreras-huerta-254030176/
   x: https://twitter.com/JulioCe67844735
-  cv: https://juliocontrerash.github.io/CV/
+  cv: null               # el CV ahora vive en /cv/; el repo viejo julio.../CV queda por decidir
 
 _sources:
   name: legacy

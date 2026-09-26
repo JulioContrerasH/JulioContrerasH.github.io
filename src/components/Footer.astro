@@ -1,5 +1,5 @@
 ---
-import { profile, t, type Lang } from '../lib/content';
+import { localizedPath, profile, t, type Lang } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -12,7 +12,6 @@ const links = [
   { key: 'scholar', label: 'Google Scholar' },
   { key: 'orcid', label: 'ORCID' },
   { key: 'linkedin', label: 'LinkedIn' },
-  { key: 'cv', label: 'CV' },
 ] as const;
 ---
 
@@ -29,6 +28,7 @@ const links = [
           ) : null
         )
       }
+      <a href={localizedPath(lang, '/cv')}>CV</a>
     </div>
     <p style="margin-top: 14px">© {new Date().getFullYear()} {profile.name}.</p>
   </div>
