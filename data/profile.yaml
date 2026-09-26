@@ -7,11 +7,13 @@
 
 name: Julio Cesar Contreras Huerta
 display_name: Julio Contreras
-photo: /assets/img/julio.jpg   # julio: avatar de GitHub por ahora; mandará una foto nueva
+photo: /assets/img/julio-cutout.webp   # fondo quitado con U2Net; reemplazar cuando haya una foto nueva
 email: contrerasnetk@gmail.com
 location:
   current: Valencia, España
-  origin: Mala, Cañete, Lima, Perú
+  current_en: Valencia, Spain
+  origin: Lima, Perú
+  origin_en: Lima, Peru
 phone: null               # no se publica por ahora
 
 audience:                 # julio: a quién quiere atraer
@@ -27,19 +29,19 @@ site:
 
 bio:
   es: >-
-    Ingeniero geógrafo de Mala, Cañete (Perú) y doctorando en la Universitat de
-    València. Empecé en Perú haciendo mapas y datos geográficos para estudios
-    ambientales; después vinieron Andes DataCube y CloudSEN12+. Ahora trabajo en
-    una idea simple: que los datos satelitales sirvan. Limpio nubes, mejoro la
+    Ingeniero geógrafo de Lima, Perú y doctorando en la Universitat de València.
+    Empecé en Perú haciendo mapas y datos geográficos para estudios ambientales;
+    después vinieron Andes DataCube y CloudSEN12+. Ahora trabajo en una idea
+    simple: que los datos satelitales sirvan. Limpio nubes, mejoro la
     resolución, comprimo y empaqueto datos, y los uso para ver agua, glaciares y
     metano.
   en: >-
-    Geographical engineer from Mala, Cañete (Peru) and PhD student at the
-    Universitat de València. I started in Peru making maps and geographic data
-    for environmental studies; then came Andes DataCube and CloudSEN12+. Now I
-    work on one simple idea: satellite data that gets used. I clean clouds,
-    improve resolution, compress and package data, and use it to look at water,
-    glaciers and methane.
+    Geographical engineer from Lima, Peru and PhD student at the Universitat de
+    València. I started in Peru making maps and geographic data for
+    environmental studies; then came Andes DataCube and CloudSEN12+. Now I work
+    on one simple idea: satellite data that gets used. I clean clouds, improve
+    resolution, compress and package data, and use it to look at water, glaciers
+    and methane.
   status: borrador
   tone: informal, primera persona, frases cortas   # julio
   en_legacy: >-

@@ -51,7 +51,7 @@ export interface Profile {
   display_name: string;
   photo: string;
   email: string;
-  location: { current: string; origin: string };
+  location: { current: string; current_en?: string; origin: string; origin_en?: string };
   audience: string[];
   goal: string;
   site: { domain: string; languages: string[] };

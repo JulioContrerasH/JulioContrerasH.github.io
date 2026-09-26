@@ -1,6 +1,7 @@
 ---
 import {
   chapterProjects,
+  localizedField,
   localizedPath,
   profile,
   publications,
@@ -29,6 +30,9 @@ const featured = research.slice(0, 4);
 const latest = publications.slice(0, 4);
 const stages = ['limpiar', 'mejorar', 'mover-y-guardar', 'compartir', 'usar'];
 const stageLabels = T.labels.stages as Record<string, string>;
+const location = profile.location as unknown as Record<string, unknown>;
+const pick = (item: unknown, field: string) =>
+  localizedField(lang, item as Record<string, unknown>, field);
 ---
 
 <div class="stage">
@@ -36,8 +40,10 @@ const stageLabels = T.labels.stages as Record<string, string>;
   <section class="hero">
     <div class="wrap">
       <div class="hero-inner">
-        <img class="portrait" src={profile.photo} alt={profile.name} width="150" height="188" />
-        <p class="eyebrow">{profile.location.origin} → {profile.location.current}</p>
+        <img class="portrait" src={profile.photo} alt={profile.name} width="760" height="714" />
+        <p class="eyebrow">
+          {localizedField(lang, location, 'origin')} → {localizedField(lang, location, 'current')}
+        </p>
         <h1>{profile.display_name}</h1>
         <p class="line">{T.hero.line}</p>
         <p class="sub">{bio}</p>
@@ -47,7 +53,6 @@ const stageLabels = T.labels.stages as Record<string, string>;
           {profile.links.github && <a href={profile.links.github}>GitHub</a>}
           {profile.links.scholar && <a href={profile.links.scholar}>Scholar</a>}
         </div>
-        <p class="scroll-hint">{T.hero.scroll}</p>
       </div>
     </div>
   </section>
@@ -64,7 +69,9 @@ const stageLabels = T.labels.stages as Record<string, string>;
               <ul>
                 {items.map((project) => (
                   <li>
-                    <a href={`${localizedPath(lang, '/research')}#${project.id}`}>{project.title}</a>
+                    <a href={`${localizedPath(lang, '/research')}#${project.id}`}>
+                      {pick(project, 'title')}
+                    </a>
                   </li>
                 ))}
               </ul>

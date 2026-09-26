@@ -1,5 +1,5 @@
 ---
-import { linkLabel, localizedField, stageLabel, t, type Lang, type Project } from '../lib/content';
+import { linkLabel, localizedField, t, type Lang, type Project } from '../lib/content';
 import StageIcon from './StageIcon.astro';
 
 interface Props {
@@ -23,7 +23,7 @@ const location = pick('location');
       <img class="thumb" src={project.image} alt={title} loading="lazy" />
     ) : (
       <div class="thumb placeholder" aria-hidden="true">
-        <StageIcon stage={project.chain_stage} size={72} />
+        <StageIcon stage="map" size={72} />
       </div>
     )
   }
@@ -33,19 +33,17 @@ const location = pick('location');
       {project.year && <span class="year">· {project.year}</span>}
     </h3>
     <div class="meta">
-      <span class="chip accent">
-        <StageIcon stage={project.chain_stage} size={14} />
-        {stageLabel(lang, project.chain_stage)}
-      </span>
       {location && <span class="chip">{location}</span>}
     </div>
     <p>{oneLiner}</p>
     {
       links.length > 0 && (
         <div class="links">
-          {links.map(([key, href]) => (
-            <a href={href}>{linkLabel(lang, key)}</a>
-          ))}
+        {links.map(([key, href]) => (
+          <a href={href} target="_blank" rel="noopener">
+            {linkLabel(lang, key)}
+          </a>
+        ))}
         </div>
       )
     }

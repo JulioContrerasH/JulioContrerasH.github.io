@@ -1,4 +1,4 @@
-"""Extrae los países que Julio quiere resaltar en el globo.
+"""Extrae los lugares donde Julio hizo proyectos, para resaltarlos en el globo.
 
 Uso:
     /data/users/julio/.conda/envs/deep/bin/python scripts/highlight_countries.py
@@ -19,11 +19,11 @@ GEO_URL = (
     "geojson/ne_110m_admin_0_countries.geojson"
 )
 
+# País -> ids de proyectos (y charlas con prefijo talk:) hechos ahí.
 COUNTRIES = {
-    "PER": "academic",
-    "ESP": "academic",
-    "MEX": "visited",
-    "BOL": "visited",
+    "PER": ["andes-datacube", "tesis-mss", "insideo", "cloudsen12plus"],
+    "ESP": ["sen2naip", "sen2sr", "sen2neon", "methanset", "taco", "cubexpress"],
+    "AUT": ["sen2sr", "talk:lps25-sen2sr"],
 }
 
 
@@ -49,7 +49,7 @@ def main() -> None:
                         "id": code.lower(),
                         "name": props.get("NAME_ES") or props.get("NAME"),
                         "name_en": props.get("NAME_EN") or props.get("NAME"),
-                        "kind": COUNTRIES[code],
+                        "projects": COUNTRIES[code],
                     },
                     "geometry": feature["geometry"],
                 }

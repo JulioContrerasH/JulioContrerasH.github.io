@@ -1,5 +1,6 @@
 ---
-import { localizedField, projects, t, type Lang } from '../lib/content';
+import { readFileSync } from 'node:fs';
+import { localizedField, projects, t, talks, type Lang } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -7,7 +8,6 @@ interface Props {
 
 const { lang } = Astro.props;
 const T = t(lang);
-const globeLabels = (T.labels as unknown as { globe: Record<string, string> }).globe;
 
 const firstLink = (links: Record<string, string>) => Object.values(links ?? {})[0] ?? null;
 
@@ -72,28 +72,64 @@ const coverageLabels = [...labelGroups.entries()].flatMap(([key, group]) => {
   }));
 });
 
+// Vuelos con estela: Lima → Valencia y Valencia → Viena (Living Planet Symposium).
+const flights = [
+  {
+    id: 'lima-valencia',
+    title: 'Lima → Valencia',
+    from: { lat: -12.05, lng: -77.04 },
+    to: { lat: 39.47, lng: -0.38 },
+    speed: 0.045,
+  },
+  {
+    id: 'valencia-viena',
+    title: 'Valencia → Vienna',
+    from: { lat: 39.47, lng: -0.38 },
+    to: { lat: 48.21, lng: 16.37 },
+    speed: 0.06,
+  },
+];
+
+// Países donde hizo proyectos, con los títulos ya resueltos en el idioma de la página.
+const countriesRaw = JSON.parse(
+  readFileSync(new URL('../../public/assets/geo/countries.json', import.meta.url), 'utf-8')
+);
+const projectTitles = new Map(
+  projects.map((p) => [p.id, localizedField(lang, p as unknown as Record<string, unknown>, 'title')])
+);
+const talkTitles = new Map(talks.map((talk) => [talk.id, talk.title ?? talk.event]));
+const countries = {
+  ...countriesRaw,
+  features: countriesRaw.features.map(
+    (feature: { properties: { projects: string[] } } & Record<string, unknown>) => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        projectList: feature.properties.projects
+          .map((id) =>
+            id.startsWith('talk:') ? talkTitles.get(id.slice(5)) : projectTitles.get(id)
+          )
+          .filter(Boolean),
+      },
+    })
+  ),
+};
+
 const data = {
   lang,
   ground,
   orbit,
   halos,
   labels: coverageLabels,
-  countriesUrl: '/assets/geo/countries.json',
-  countryTag: globeLabels.countries,
+  countries,
+  flights,
   open: T.labels.open,
-  arc: { startLat: -12.055, startLng: -77.083, endLat: 39.472, endLng: -0.376 },
 };
 ---
 
 <div id="globe-bg" aria-hidden="true"></div>
 <div id="globe" aria-hidden="true"></div>
 <div class="globe-tip" role="status"></div>
-<div class="globe-legend" aria-hidden="true">
-  <span class="item"><span class="mark point"></span>{globeLabels.points}</span>
-  <span class="item"><span class="mark area"></span>{globeLabels.areas}</span>
-  <span class="item"><span class="mark country"></span>{globeLabels.countries}</span>
-  <span class="item"><span class="mark sat"></span>{globeLabels.satellites}</span>
-</div>
 <script type="application/json" id="globe-data" set:html={JSON.stringify(data)} />
 
 <script>
@@ -116,12 +152,25 @@ const data = {
       { passive: true }
     );
 
-    const showTip = (item: { title: string; year?: string; location?: string; url?: string | null }) => {
+    const showTip = (item: {
+      title: string;
+      year?: string;
+      location?: string;
+      lines?: string[];
+      url?: string | null;
+    }) => {
       tip.textContent = '';
       const strong = document.createElement('strong');
       strong.textContent = item.year ? `${item.title} · ${item.year}` : item.title;
       tip.append(strong);
-      if (item.location) {
+      if (item.lines?.length) {
+        for (const line of item.lines) {
+          const span = document.createElement('span');
+          span.className = 'tip-line';
+          span.textContent = line;
+          tip.append(span);
+        }
+      } else if (item.location) {
         const span = document.createElement('span');
         span.className = 'tip-meta';
         span.textContent = item.location;
@@ -142,7 +191,12 @@ const data = {
 
     const hideTip = () => tip.classList.remove('visible');
 
-    type CountryProps = { id: string; name: string; name_en?: string; kind: string };
+    type CountryProps = {
+      id: string;
+      name: string;
+      name_en?: string;
+      projectList?: string[];
+    };
 
     const countryName = (props: CountryProps) =>
       data.lang === 'en' && props.name_en ? props.name_en : props.name;
@@ -151,16 +205,117 @@ const data = {
 
     // Resaltado sutil: tinte de alpha bajo sin paredes, el mapa de puntos se ve debajo.
     const countryCap = (feature: { properties: CountryProps }) => {
-      const { id, kind } = feature.properties;
-      const hover = hoveredCountry === id;
-      if (kind === 'academic') return hover ? 'rgba(168, 139, 250, 0.32)' : 'rgba(168, 139, 250, 0.14)';
-      return hover ? 'rgba(242, 244, 247, 0.18)' : 'rgba(242, 244, 247, 0.07)';
+      const { id } = feature.properties;
+      return hoveredCountry === id ? 'rgba(168, 139, 250, 0.34)' : 'rgba(168, 139, 250, 0.16)';
     };
 
-    const countryStroke = (feature: { properties: CountryProps }) =>
-      feature.properties.kind === 'academic'
-        ? 'rgba(168, 139, 250, 0.65)'
-        : 'rgba(242, 244, 247, 0.32)';
+    const countryStroke = () => 'rgba(168, 139, 250, 0.7)';
+
+    const toRad = (deg: number) => (deg * Math.PI) / 180;
+    const toDeg = (rad: number) => (rad * 180) / Math.PI;
+
+    // Interpolación por gran círculo entre dos puntos (para la ruta de los aviones).
+    const greatCircle = (
+      from: { lat: number; lng: number },
+      to: { lat: number; lng: number },
+      t: number
+    ) => {
+      const φ1 = toRad(from.lat);
+      const λ1 = toRad(from.lng);
+      const φ2 = toRad(to.lat);
+      const λ2 = toRad(to.lng);
+      const d =
+        2 *
+        Math.asin(
+          Math.sqrt(
+            Math.sin((φ2 - φ1) / 2) ** 2 +
+              Math.cos(φ1) * Math.cos(φ2) * Math.sin((λ2 - λ1) / 2) ** 2
+          )
+        );
+      if (d === 0) return { lat: from.lat, lng: from.lng };
+      const a = Math.sin((1 - t) * d) / Math.sin(d);
+      const b = Math.sin(t * d) / Math.sin(d);
+      const x = a * Math.cos(φ1) * Math.cos(λ1) + b * Math.cos(φ2) * Math.cos(λ2);
+      const y = a * Math.cos(φ1) * Math.sin(λ1) + b * Math.cos(φ2) * Math.sin(λ2);
+      const z = a * Math.sin(φ1) + b * Math.sin(φ2);
+      return { lat: toDeg(Math.atan2(z, Math.hypot(x, y))), lng: toDeg(Math.atan2(y, x)) };
+    };
+
+    // Silueta de avión simple (nariz hacia +Z tras rotar).
+    const planeGeometry = (THREE: typeof import('three')) => {
+      const shape = new THREE.Shape();
+      shape.moveTo(0, 0.62);
+      shape.lineTo(0.1, 0.18);
+      shape.lineTo(0.58, -0.16);
+      shape.lineTo(0.58, -0.3);
+      shape.lineTo(0.1, -0.24);
+      shape.lineTo(0.1, -0.5);
+      shape.lineTo(0.26, -0.6);
+      shape.lineTo(0.02, -0.58);
+      shape.lineTo(-0.02, -0.58);
+      shape.lineTo(-0.26, -0.6);
+      shape.lineTo(-0.1, -0.5);
+      shape.lineTo(-0.1, -0.24);
+      shape.lineTo(-0.58, -0.3);
+      shape.lineTo(-0.58, -0.16);
+      shape.lineTo(-0.1, 0.18);
+      shape.closePath();
+      const geometry = new THREE.ShapeGeometry(shape);
+      geometry.rotateX(Math.PI / 2);
+      geometry.scale(0.028, 0.028, 0.028);
+      return geometry;
+    };
+
+    // Iconos de clima dibujados a mano (sin depender de fuentes de emoji).
+    const weatherTexture = (kind: string, THREE: typeof import('three')) => {
+      const size = 128;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
+      ctx.strokeStyle = 'rgba(226, 232, 240, 0.95)';
+      ctx.fillStyle = 'rgba(226, 232, 240, 0.95)';
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      const cx = size / 2;
+      if (kind === 'cloud') {
+        ctx.beginPath();
+        ctx.arc(cx - 22, 62, 18, Math.PI * 0.6, Math.PI * 1.5);
+        ctx.arc(cx - 2, 50, 24, Math.PI, Math.PI * 1.95);
+        ctx.arc(cx + 26, 62, 17, Math.PI * 1.4, Math.PI * 0.5);
+        ctx.closePath();
+        ctx.stroke();
+      } else if (kind === 'sun') {
+        ctx.beginPath();
+        ctx.arc(cx, cx, 20, 0, Math.PI * 2);
+        ctx.stroke();
+        for (let i = 0; i < 8; i++) {
+          const angle = (i / 8) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(cx + Math.cos(angle) * 30, cx + Math.sin(angle) * 30);
+          ctx.lineTo(cx + Math.cos(angle) * 42, cx + Math.sin(angle) * 42);
+          ctx.stroke();
+        }
+      } else {
+        ctx.beginPath();
+        ctx.rect(cx - 16, cx - 14, 32, 28);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.rect(cx - 52, cx - 10, 28, 20);
+        ctx.rect(cx + 24, cx - 10, 28, 20);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx, cx - 14);
+        ctx.lineTo(cx, cx - 34);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(cx, cx - 38, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      const texture = new THREE.CanvasTexture(canvas);
+      return texture;
+    };
 
     const boot = async () => {
       const [{ default: Globe }, THREE] = await Promise.all([import('globe.gl'), import('three')]);
@@ -227,22 +382,17 @@ const data = {
       const heroView = { lat: 18, lng: -35, altitude: 2.1 };
       globe.pointOfView(heroView, 0);
 
-      if (data.countriesUrl) {
-        try {
-          const response = await fetch(data.countriesUrl);
-          const countries = await response.json();
-          globe.polygonsData(countries.features ?? []);
-        } catch {
-          globe.polygonsData([]);
-        }
-      }
+      globe.polygonsData(data.countries?.features ?? []);
 
       globe.onPolygonHover((polygon: unknown) => {
         const props = (polygon as { properties?: CountryProps } | null)?.properties;
         hoveredCountry = props?.id ?? null;
         globe.polygonCapColor(countryCap);
         if (props) {
-          showTip({ title: countryName(props), location: data.countryTag });
+          showTip({
+            title: countryName(props),
+            lines: props.projectList ?? [],
+          });
         } else {
           hideTip();
         }
@@ -275,41 +425,110 @@ const data = {
         });
       }
 
-      if (data.arc) {
+      // Rutas de los vuelos con estela de luz animada.
+      const flightArcs = (data.flights ?? []).map(
+        (flight: { from: { lat: number; lng: number }; to: { lat: number; lng: number } }) => ({
+          startLat: flight.from.lat,
+          startLng: flight.from.lng,
+          endLat: flight.to.lat,
+          endLng: flight.to.lng,
+        })
+      );
+
+      if (flightArcs.length) {
         globe
-          .arcsData([data.arc])
+          .arcsData(flightArcs)
           .arcColor(['#a88bfa', '#60a5fa'])
-          .arcDashLength(0.4)
-          .arcDashGap(1.4)
-          .arcDashAnimateTime(reduced ? 0 : 3200)
-          .arcStroke(0.4);
+          .arcStroke(0.28)
+          .arcDashLength(0.16)
+          .arcDashGap(0.42)
+          .arcDashAnimateTime(reduced ? 0 : 2600)
+          .arcAltitudeAutoScale(0.35);
       }
 
-      if ((data.orbit ?? []).length) {
-        const count = data.orbit.length;
-        const satellites = data.orbit.map(
+      if ((data.orbit ?? []).length || (data.flights ?? []).length) {
+        const count = (data.orbit ?? []).length;
+        const satellites = (data.orbit ?? []).map(
           (sat: { id: string; title: string; year: string; url: string | null }, index: number) => ({
+            kind: 'sat',
             ...sat,
             speed: 0.22 + (index % 3) * 0.07,
-            phase: (index * Math.PI * 2) / count,
+            phase: (index * Math.PI * 2) / Math.max(count, 1),
             inclination: (index % 2 === 0 ? 1 : -1) * (0.35 + (index % 3) * 0.2),
             altitude: 0.09 + (index % 3) * 0.03,
           })
         );
 
-        const geometry = new THREE.SphereGeometry(0.011, 12, 12);
-        const material = new THREE.MeshBasicMaterial({ color: '#f59e0b' });
+        const planes = (data.flights ?? []).map(
+          (
+            flight: {
+              id: string;
+              title: string;
+              from: { lat: number; lng: number };
+              to: { lat: number; lng: number };
+              speed: number;
+            },
+            index: number
+          ) => ({
+            kind: 'plane',
+            ...flight,
+            phase: index / Math.max((data.flights ?? []).length, 1),
+          })
+        );
+
+        const satGeometry = new THREE.SphereGeometry(0.011, 12, 12);
+        const satMaterial = new THREE.MeshBasicMaterial({ color: '#f59e0b' });
+        const planeMesh = planeGeometry(THREE);
+        const planeMaterial = new THREE.MeshBasicMaterial({
+          color: '#e2e8f0',
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.95,
+        });
+
+        const layer = [...satellites, ...planes];
 
         globe
-          .customLayerData(satellites)
-          .customThreeObject(() => new THREE.Mesh(geometry, material))
-          .customThreeObjectUpdate((object, sat) => {
-            const t = (performance.now() / 1000) * sat.speed + sat.phase;
-            const lat = Math.sin(t) * sat.inclination * 57.3;
-            const lng = ((((t * 57.3) % 360) + 540) % 360) - 180;
-            const coords = globe.getCoords(lat, lng, sat.altitude);
-            object.position.set(coords.x, coords.y, coords.z);
+          .customLayerData(layer)
+          .customThreeObject((d: { kind: string }) =>
+            d.kind === 'plane'
+              ? new THREE.Mesh(planeMesh, planeMaterial)
+              : new THREE.Mesh(satGeometry, satMaterial)
+          )
+          .customThreeObjectUpdate((object, d: Record<string, any>) => {
+            if (d.kind === 'plane') {
+              const t = ((performance.now() / 1000) * d.speed + d.phase) % 1;
+              const point = greatCircle(d.from, d.to, t);
+              const ahead = greatCircle(d.from, d.to, Math.min(t + 0.01, 1));
+              const altitude = 0.03 + 0.22 * Math.sin(Math.PI * t);
+              const coords = globe.getCoords(point.lat, point.lng, altitude);
+              const next = globe.getCoords(ahead.lat, ahead.lng, altitude);
+              object.position.set(coords.x, coords.y, coords.z);
+              object.up.set(coords.x, coords.y, coords.z).normalize();
+              object.lookAt(next.x, next.y, next.z);
+            } else {
+              const t = (performance.now() / 1000) * d.speed + d.phase;
+              const lat = Math.sin(t) * d.inclination * 57.3;
+              const lng = ((((t * 57.3) % 360) + 540) % 360) - 180;
+              const coords = globe.getCoords(lat, lng, d.altitude);
+              object.position.set(coords.x, coords.y, coords.z);
+            }
           });
+
+        globe.onCustomLayerHover((item: unknown) => {
+          if (item) {
+            const d = item as { title: string; year?: string; url?: string | null };
+            showTip({ title: d.title, year: d.year ?? '', lines: d.url ? [] : [] });
+          } else {
+            hideTip();
+          }
+          container.style.cursor = item ? 'pointer' : 'default';
+        });
+
+        globe.onCustomLayerClick((item: unknown) => {
+          const url = (item as { url?: string | null })?.url;
+          if (url) window.open(url, '_blank', 'noopener');
+        });
 
         const orbitPaths = satellites.map(
           (sat: { inclination: number; phase: number; altitude: number }) => {
@@ -336,17 +555,71 @@ const data = {
           .pathDashGap(0.012)
           .pathDashAnimateTime(reduced ? 0 : 6000);
 
-        const customHover = (
-          globe as unknown as {
-            onCustomLayerHover?: (fn: (sat: unknown) => void) => void;
-          }
-        ).onCustomLayerHover;
-        if (typeof customHover === 'function') {
-          customHover.call(globe, (sat: unknown) => {
-            if (sat) showTip(sat as { title: string; year: string; url: string | null });
-            else hideTip();
-          });
+        // three-globe solo actualiza la capa al cambiar los datos: hay que re-empujarlos.
+        if (!reduced) {
+          let last = 0;
+          const tick = (now: number) => {
+            if (now - last > 110) {
+              last = now;
+              globe.customLayerData([...layer]);
+            }
+            requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
         }
+      }
+
+      // Iconos de clima/satélite que aparecen y se van, uno a la vez.
+      let weatherSprite: import('three').Sprite | null = null;
+      if (!reduced) {
+        const kinds = ['cloud', 'sun', 'satellite'];
+        const materials = kinds.map((kind) => {
+          const texture = weatherTexture(kind, THREE);
+          return texture
+            ? new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0 })
+            : null;
+        });
+
+        weatherSprite = new THREE.Sprite(materials[0] ?? undefined);
+        weatherSprite.scale.set(0.09, 0.09, 1);
+        weatherSprite.visible = false;
+
+        const scene = globe.scene();
+        scene.add(weatherSprite);
+
+        let nextAt = performance.now() + 4000;
+        let phaseStart = 0;
+        let duration = 9000;
+
+        const tickWeather = (now: number) => {
+          if (!weatherSprite) return;
+          if (!weatherSprite.visible && now >= nextAt) {
+            const index = Math.floor(Math.random() * materials.length);
+            const material = materials[index];
+            if (material) {
+              weatherSprite.material = material;
+              const lat = -55 + Math.random() * 125;
+              const lng = -180 + Math.random() * 360;
+              const coords = globe.getCoords(lat, lng, 0.22);
+              weatherSprite.position.set(coords.x, coords.y, coords.z);
+              weatherSprite.visible = true;
+              phaseStart = now;
+              duration = 8000 + Math.random() * 5000;
+            }
+          } else if (weatherSprite.visible) {
+            const t = (now - phaseStart) / duration;
+            const material = weatherSprite.material as import('three').SpriteMaterial;
+            if (t >= 1) {
+              weatherSprite.visible = false;
+              material.opacity = 0;
+              nextAt = now + 6000 + Math.random() * 8000;
+            } else {
+              material.opacity = Math.sin(Math.PI * t) * 0.85;
+            }
+          }
+          requestAnimationFrame(tickWeather);
+        };
+        requestAnimationFrame(tickWeather);
       }
 
       globe.onPointHover((point: unknown) => {
@@ -407,8 +680,12 @@ const data = {
     if (!saveData) {
       const idle = (window as unknown as { requestIdleCallback?: (fn: () => void, opts?: object) => void })
         .requestIdleCallback;
-      if (idle) idle(() => void boot().catch(() => container.remove()), { timeout: 2500 });
-      else setTimeout(() => void boot().catch(() => container.remove()), 700);
+      const fail = (error: unknown) => {
+        console.error('globe failed', error);
+        container.remove();
+      };
+      if (idle) idle(() => void boot().catch(fail), { timeout: 2500 });
+      else setTimeout(() => void boot().catch(fail), 700);
     }
   }
 </script>

@@ -52,6 +52,14 @@ const stroke = {
     )
   }
   {
+    stage === 'map' && (
+      <svg viewBox="0 0 24 24" {...stroke}>
+        <path d="M3 7.5 9 4.5l6 3 6-3v12l-6 3-6-3-6 3Z" />
+        <path class="flow" d="M9 4.5v12M15 7.5v12" />
+      </svg>
+    )
+  }
+  {
     stage === 'usar' && (
       <svg viewBox="0 0 24 24" {...stroke}>
         <path d="M12 21.5s-6-5.3-6-10.2a6 6 0 1 1 12 0c0 4.9-6 10.2-6 10.2Z" />

@@ -14,7 +14,6 @@ es:
     cv: CV
   hero:
     line: Datos satelitales que sirven.
-    scroll: Baja para ver el recorrido
     email: Escríbeme
     cv: CV
   labels:
@@ -31,14 +30,7 @@ es:
     spec: Spec
     all_projects: Todos los proyectos
     all_publications: Todas las publicaciones
-    stage: Etapa
     open: Abrir
-    globe:
-      points: Proyectos con lugar
-      areas: Cobertura de datasets
-      countries: Países donde he estado
-      satellites: Herramientas en órbita
-      world: Mundial
     stages:
       limpiar: Limpiar
       mejorar: Mejorar
@@ -62,7 +54,7 @@ es:
   chapters:
     peru:
       title: Perú
-      text: Nací en Mala, Cañete. Estudié Ingeniería Geográfica en la UNMSM y salí primer puesto de mi promoción en 2022. Hice mapas y datos GIS para estudios ambientales en INSIDEO. Mi tesis armonizó Landsat MSS (1972-1999) con IA. Después vinieron Andes DataCube y CloudSEN12+.
+      text: Nací en Lima, Perú. Estudié Ingeniería Geográfica en la UNMSM y salí primer puesto de mi promoción en 2022. Hice mapas y datos GIS para estudios ambientales en INSIDEO. Mi tesis armonizó Landsat MSS (1972-1999) con IA. Después vinieron Andes DataCube y CloudSEN12+.
     valencia:
       title: Valencia
       text: >-
@@ -87,7 +79,6 @@ en:
     cv: CV
   hero:
     line: Satellite data that gets used.
-    scroll: Scroll to follow the path
     email: Email me
     cv: CV
   labels:
@@ -104,14 +95,7 @@ en:
     spec: Spec
     all_projects: All projects
     all_publications: All publications
-    stage: Stage
     open: Open
-    globe:
-      points: Projects with a place
-      areas: Dataset coverages
-      countries: Countries I have been to
-      satellites: Tools in orbit
-      world: Worldwide
     stages:
       limpiar: Clean
       mejorar: Improve
@@ -135,7 +119,7 @@ en:
   chapters:
     peru:
       title: Peru
-      text: I was born in Mala, Cañete. I studied Geographical Engineering at UNMSM and finished top of my class in 2022. I made maps and GIS data for environmental studies at INSIDEO. My thesis harmonized Landsat MSS (1972-1999) with AI. Then came Andes DataCube and CloudSEN12+.
+      text: I was born in Lima, Peru. I studied Geographical Engineering at UNMSM and finished top of my class in 2022. I made maps and GIS data for environmental studies at INSIDEO. My thesis harmonized Landsat MSS (1972-1999) with AI. Then came Andes DataCube and CloudSEN12+.
     valencia:
       title: Valencia
       text: >-
