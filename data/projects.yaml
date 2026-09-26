@@ -30,7 +30,7 @@
   location: Andes del Perú
   location_en: Peruvian Andes
   footprint: [-81.4, -18.4, -68.6, -0.1]   # Perú, aprox
-  image: /assets/img/projects/andes-datacube.jpg
+  image: /assets/img/projects/andes-datacube.webp
   links:
     web: https://andesdatacube.github.io/
     repo: https://github.com/andesdatacube

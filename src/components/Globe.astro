@@ -32,72 +32,60 @@ const orbit = projects
     url: firstLink(p.links),
   }));
 
-const footprint = (p: (typeof projects)[number]) => {
+// Coberturas regionales: un halo pulsante por región (centro del footprint).
+// El mapa de puntos queda siempre visible: nada de rectángulos ni polígonos de área.
+const withFootprint = projects.filter((p) => p.footprint);
+const regionKey = (fp: number[]) => fp.join(',');
+const regions = new Map<string, { lat: number; lng: number; maxR: number }>();
+for (const p of withFootprint) {
+  const key = regionKey(p.footprint!);
+  if (regions.has(key)) continue;
   const [w, s, e, n] = p.footprint!;
-  return {
-    type: 'Feature',
-    properties: {
-      id: p.id,
-      title: localizedField(lang, p as unknown as Record<string, unknown>, 'title'),
-      year: p.year ? String(p.year) : '',
-      location: localizedField(lang, p as unknown as Record<string, unknown>, 'location'),
-      url: firstLink(p.links),
-      kind: 'area',
-    },
-    geometry: {
-      type: 'Polygon',
-      coordinates: [
-        [
-          [w, s],
-          [e, s],
-          [e, n],
-          [w, n],
-          [w, s],
-        ],
-      ],
-    },
-  };
-};
+  regions.set(key, {
+    lat: (s + n) / 2,
+    lng: (w + e) / 2,
+    maxR: Math.min(Math.max(Math.min(e - w, n - s) * 0.45, 4), 13),
+  });
+}
+const halos = [...regions.values()];
 
-const areas = projects.filter((p) => p.footprint).map(footprint);
-
-const globalAreas = projects
-  .filter((p) => p.global)
-  .map((p) => ({
-    type: 'Feature',
-    properties: {
-      id: p.id,
-      title: localizedField(lang, p as unknown as Record<string, unknown>, 'title'),
-      year: p.year ? String(p.year) : '',
-      location: globeLabels.world,
-      url: firstLink(p.links),
-      kind: 'global',
-      global: true,
-    },
-    geometry: {
-      type: 'Polygon',
-      coordinates: [
-        [
-          [-180, -85],
-          [180, -85],
-          [180, 85],
-          [-180, 85],
-          [-180, -85],
-        ],
-      ],
-    },
+// Datasets regionales sin lugar puntual (orbit con footprint): etiqueta con punto,
+// repartidas dentro de la región cuando comparten cobertura.
+const labelGroups = new Map<string, typeof withFootprint>();
+for (const project of withFootprint) {
+  if (project.type !== 'orbit') continue;
+  const key = regionKey(project.footprint!);
+  const group = labelGroups.get(key) ?? [];
+  group.push(project);
+  labelGroups.set(key, group);
+}
+const coverageLabels = [...labelGroups.entries()].flatMap(([key, group]) => {
+  const region = regions.get(key)!;
+  return group.map((p, index) => ({
+    id: p.id,
+    title: localizedField(lang, p as unknown as Record<string, unknown>, 'title'),
+    year: p.year ? String(p.year) : '',
+    location: localizedField(lang, p as unknown as Record<string, unknown>, 'one_liner'),
+    url: firstLink(p.links),
+    lat: region.lat,
+    lng: region.lng + (index - (group.length - 1) / 2) * Math.min(region.maxR * 1.1, 9),
   }));
+});
 
 const data = {
+  lang,
   ground,
   orbit,
-  areas: [...areas, ...globalAreas],
+  halos,
+  labels: coverageLabels,
   countriesUrl: '/assets/geo/countries.json',
+  countryTag: globeLabels.countries,
   open: T.labels.open,
   arc: { startLat: -12.055, startLng: -77.083, endLat: 39.472, endLng: -0.376 },
 };
 ---
 
+<div id="globe-bg" aria-hidden="true"></div>
 <div id="globe" aria-hidden="true"></div>
 <div class="globe-tip" role="status"></div>
 <div class="globe-legend" aria-hidden="true">
@@ -154,14 +142,25 @@ const data = {
 
     const hideTip = () => tip.classList.remove('visible');
 
-    const capColor = (kind: string) =>
-      kind === 'academic'
-        ? 'rgba(124, 58, 237, 0.42)'
-        : kind === 'visited'
-          ? 'rgba(96, 165, 250, 0.26)'
-          : kind === 'global'
-            ? 'rgba(168, 139, 250, 0.09)'
-            : 'rgba(124, 58, 237, 0.3)';
+    type CountryProps = { id: string; name: string; name_en?: string; kind: string };
+
+    const countryName = (props: CountryProps) =>
+      data.lang === 'en' && props.name_en ? props.name_en : props.name;
+
+    let hoveredCountry: string | null = null;
+
+    // Resaltado sutil: tinte de alpha bajo sin paredes, el mapa de puntos se ve debajo.
+    const countryCap = (feature: { properties: CountryProps }) => {
+      const { id, kind } = feature.properties;
+      const hover = hoveredCountry === id;
+      if (kind === 'academic') return hover ? 'rgba(168, 139, 250, 0.32)' : 'rgba(168, 139, 250, 0.14)';
+      return hover ? 'rgba(242, 244, 247, 0.18)' : 'rgba(242, 244, 247, 0.07)';
+    };
+
+    const countryStroke = (feature: { properties: CountryProps }) =>
+      feature.properties.kind === 'academic'
+        ? 'rgba(168, 139, 250, 0.65)'
+        : 'rgba(242, 244, 247, 0.32)';
 
     const boot = async () => {
       const [{ default: Globe }, THREE] = await Promise.all([import('globe.gl'), import('three')]);
@@ -181,19 +180,41 @@ const data = {
         .pointColor(() => '#a88bfa')
         .pointsMerge(false)
         .pointsData(data.ground ?? [])
-        .polygonAltitude((feature: { properties: { global?: boolean } }) =>
-          feature.properties.global ? 0.001 : 0.006
+        .polygonAltitude(0.006)
+        .polygonCapColor(countryCap)
+        .polygonSideColor(() => 'rgba(0, 0, 0, 0)')
+        .polygonStrokeColor(countryStroke)
+        .polygonsTransitionDuration(250);
+
+      // Anillos: pulso corto en los puntos ground + halo amplio y lento por cobertura regional.
+      const pulses = (data.ground ?? []).map((g: { lat: number; lng: number }) => ({
+        lat: g.lat,
+        lng: g.lng,
+        maxR: 3.2,
+        speed: 1.6,
+        period: 1400,
+        halo: false,
+      }));
+      const coverageHalos = (data.halos ?? []).map(
+        (h: { lat: number; lng: number; maxR: number }) => ({
+          ...h,
+          speed: h.maxR / 6,
+          period: 4200,
+          halo: true,
+        })
+      );
+
+      globe
+        .ringColor((d: { halo: boolean }) =>
+          d.halo
+            ? (progress: number) => `rgba(96, 165, 250, ${0.38 * (1 - progress)})`
+            : (progress: number) => `rgba(168, 139, 250, ${0.75 * Math.sqrt(1 - progress)})`
         )
-        .polygonCapColor((feature: { properties: { kind: string } }) => capColor(feature.properties.kind))
-        .polygonSideColor(() => 'rgba(124, 58, 237, 0.1)')
-        .polygonStrokeColor(() => 'rgba(168, 139, 250, 0.55)')
-        .polygonsTransitionDuration(300)
-        .ringColor(() => (progress: number) => `rgba(168, 139, 250, ${Math.sqrt(1 - progress)})`)
-        .ringMaxRadius(3.2)
-        .ringPropagationSpeed(1.6)
-        .ringRepeatPeriod(reduced ? 0 : 1400)
-        .ringAltitude(0.002)
-        .ringsData(reduced ? [] : (data.ground ?? []));
+        .ringMaxRadius((d: { maxR: number }) => d.maxR)
+        .ringPropagationSpeed((d: { speed: number }) => d.speed)
+        .ringRepeatPeriod((d: { period: number }) => (reduced ? 0 : d.period))
+        .ringAltitude(0.0015)
+        .ringsData(reduced ? [] : [...pulses, ...coverageHalos]);
 
       globe.globeMaterial().transparent = true;
 
@@ -210,25 +231,49 @@ const data = {
         try {
           const response = await fetch(data.countriesUrl);
           const countries = await response.json();
-          globe.polygonsData([...(data.areas ?? []), ...(countries.features ?? [])]);
+          globe.polygonsData(countries.features ?? []);
         } catch {
-          globe.polygonsData(data.areas ?? []);
+          globe.polygonsData([]);
         }
-      } else {
-        globe.polygonsData(data.areas ?? []);
       }
 
       globe.onPolygonHover((polygon: unknown) => {
-        const props = (polygon as { properties?: Record<string, unknown> } | null)?.properties;
-        if (props) showTip(props as { title: string; year: string; location: string; url: string });
-        else hideTip();
-        container.style.cursor = polygon ? 'pointer' : 'default';
+        const props = (polygon as { properties?: CountryProps } | null)?.properties;
+        hoveredCountry = props?.id ?? null;
+        globe.polygonCapColor(countryCap);
+        if (props) {
+          showTip({ title: countryName(props), location: data.countryTag });
+        } else {
+          hideTip();
+        }
+        container.style.cursor = 'default';
       });
 
-      globe.onPolygonClick((polygon: unknown) => {
-        const url = (polygon as { properties?: { url?: string } } | null)?.properties?.url;
-        if (url) window.open(url, '_blank', 'noopener');
-      });
+      // Etiquetas con punto para datasets regionales (SEN2NAIP, SEN2NEON...).
+      if ((data.labels ?? []).length) {
+        globe
+          .labelsData(data.labels)
+          .labelLat((d: { lat: number }) => d.lat)
+          .labelLng((d: { lng: number }) => d.lng)
+          .labelText((d: { title: string }) => d.title)
+          .labelSize(small ? 0.75 : 0.6)
+          .labelDotRadius(small ? 0.3 : 0.24)
+          .labelColor(() => 'rgba(147, 197, 253, 0.9)')
+          .labelAltitude(0.008)
+          .labelResolution(2);
+
+        globe.onLabelHover((label: unknown) => {
+          if (label)
+            showTip(label as { title: string; year: string; location: string; url: string | null });
+          else hideTip();
+          container.style.cursor = label ? 'pointer' : 'default';
+        });
+
+        globe.onLabelClick((label: unknown) => {
+          const url = (label as { url?: string | null })?.url;
+          if (url) window.open(url, '_blank', 'noopener');
+        });
+      }
 
       if (data.arc) {
         globe
@@ -319,7 +364,7 @@ const data = {
       const views: Record<string, { lat: number; lng: number; altitude: number }> = {
         peru: { lat: -10, lng: -76, altitude: 1.7 },
         valencia: { lat: 39.5, lng: -0.4, altitude: 1.7 },
-        ahora: { lat: 51.5, lng: -0.1, altitude: 2.0 },
+        ahora: { lat: 22, lng: -40, altitude: 2.2 },
       };
 
       const chapters = document.querySelectorAll('.chapter');
@@ -351,12 +396,12 @@ const data = {
       addEventListener(
         'resize',
         () => {
-          globe.width(innerWidth).height(innerHeight);
+          globe.width(container.clientWidth).height(container.clientHeight);
         },
         { passive: true }
       );
 
-      globe.width(innerWidth).height(innerHeight);
+      globe.width(container.clientWidth).height(container.clientHeight);
     };
 
     if (!saveData) {
