@@ -1242,18 +1242,16 @@ li {
   border: 0;
 }
 
-/* transición suave del escenario oscuro del globo al contenido */
-.solid::before {
+/* el escenario oscuro del globo se funde con el fondo de la página, sin cambio brusco */
+.stage::after {
   content: '';
   position: absolute;
-  top: 0;
   left: 0;
   right: 0;
-  height: 150px;
-  background: linear-gradient(180deg, rgba(7, 7, 15, 0.92) 0%, rgba(7, 7, 15, 0) 100%);
+  bottom: 0;
+  height: 48vh;
+  z-index: 0;
   pointer-events: none;
+  background: linear-gradient(180deg, rgba(7, 7, 15, 0) 0%, var(--bg) 96%);
 }
 
-:root[data-theme='dark'] .solid::before {
-  background: none;
-}
