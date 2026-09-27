@@ -1,6 +1,5 @@
 import { parse } from 'yaml';
 import profileRaw from '../../data/profile.yaml?raw';
-import projectsRaw from '../../data/projects.yaml?raw';
 import publicationsRaw from '../../data/publications.yaml?raw';
 import talksRaw from '../../data/talks.yaml?raw';
 import uiRaw from '../../data/ui.yaml?raw';
@@ -129,7 +128,22 @@ export interface UiStrings {
   chapters: Record<'peru' | 'valencia' | 'ahora', { title: string; text: string }>;
 }
 
-const projectsAll: Project[] = parse(projectsRaw);
+// Los proyectos se mantienen como Markdown estilo Hugo: un .md por proyecto en
+// src/content/projects/, con el frontmatter (datos) y el cuerpo libre debajo.
+const projectSources = import.meta.glob('../content/projects/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+function parseFrontmatter(raw: string): Record<string, unknown> {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  return match ? (parse(match[1]) as Record<string, unknown>) : {};
+}
+
+const projectsAll = Object.values(projectSources).map(
+  (raw) => parseFrontmatter(raw) as unknown as Project
+);
 
 export const profile: Profile = parse(profileRaw);
 export const ui = parse(uiRaw) as Record<Lang, UiStrings>;

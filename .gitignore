@@ -6,3 +6,6 @@
 node_modules/
 dist/
 .astro/
+
+# Descargas de los scripts (se bajan solos)
+scripts/*.geojson
