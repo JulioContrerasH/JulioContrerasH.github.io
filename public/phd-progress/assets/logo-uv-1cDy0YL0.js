@@ -1,0 +1,1 @@
+var e=`/phd-progress/logo-isp.png`,t=`/phd-progress/logo-uv.svg`;export{e as n,t};
